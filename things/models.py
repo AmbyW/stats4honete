@@ -63,6 +63,24 @@ class TypeTeam(models.Model):
         verbose_name_plural = _('Facciones')
 
 
+class TypeHero(models.Model):
+    name = models.CharField(verbose_name=_('Tipo de Héroe'), max_length=25, null=False, blank=False, unique=True)
+    code = models.CharField(verbose_name=_('Código'), max_length=1, null=False, blank=False, unique=True)
+
+    class Meta:
+        verbose_name = _('Tipo de Héroe')
+        verbose_name_plural = _('Tipos de Héroes')
+
+
+class TypeAttack(models.Model):
+    name = models.CharField(verbose_name=_('Tipo de Ataque'), max_length=25, null=False, blank=False, unique=True)
+    code = models.CharField(verbose_name=_('Código'), max_length=1, null=False, blank=False, unique=True)
+
+    class Meta:
+        verbose_name = _('Tipo de Ataque')
+        verbose_name_plural = _('Tipos de Ataques')
+
+
 class Player(models.Model):
     name = models.CharField(max_length=50, verbose_name='Nombre')
     userprof = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, default=None)

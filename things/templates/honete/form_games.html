@@ -1,0 +1,16 @@
+{% extends 'honete/homehon.html' %}
+    {% block content %}
+    {% if errors %}
+    <div>
+        <h3>{{errors}}</h3>
+    </div>
+    {% endif %}
+    <form method="POST" enctype="multipart/form-data"> {% csrf_token %}
+    {% for field in form %}
+        {{ field.label }}
+        {{ field }}
+        {{ field.errors }}
+    {% endfor %}
+        <button type="submit">Agregar</button>
+    </form>
+    {% endblock content %}

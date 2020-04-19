@@ -1,0 +1,144 @@
+/* LINKS */
+a {
+	color: #00c1ff;
+	text-decoration: none;
+}
+
+a:hover, .ladder_data_row:hover a {
+	color: #3fddff;
+	text-decoration: underline;
+	text-shadow: 1px 1px 3px #006886;
+}
+
+#footer a, .navigation a {
+	color: #FFAA00 !important;
+	text-decoration: none !important;
+}
+
+#footer a:hover, .navigation a:hover, .ladder_data_row:hover a {
+	color: #FFBF24 !important;
+	text-decoration: underline !important;
+	text-shadow: 1px 1px 3px #865900 !important;
+}
+
+/* SIZES */
+.fontXXXS {
+	font-size: 12px;
+}
+
+.fontXXS {
+	font-size: 13px;
+}
+
+.fontXS {
+	font-size: 14px;
+}
+
+.fontS {
+	font-size: 15px;
+}
+
+.fontM {
+	font-size: 16px;
+}
+
+.fontL {
+	font-size: 17px;
+}
+
+.fontXL {
+	font-size: 18px;
+}
+
+.fontXXL {
+	font-size: 21px;
+}
+
+.fontXXXL {
+	font-size: 31px;
+}
+
+/* COLORS */
+.yellow {
+	color: #FFAA00;
+}
+
+.white {
+	color: #FFFFFF;
+}
+
+.greyDark {
+	color: #5B5B5B;
+}
+
+.greyLight {
+	color: #AFAFAF;
+}
+
+.blue {
+	color: #00c1ff;
+}
+
+.red {
+	color: #FF273B;
+}
+
+.green {
+	color: #00FF00;
+}
+
+/* OTHER */
+.title {
+	font-family: 'magrabold', sans-serif;
+	color: #FFAA00;
+	text-transform: uppercase;
+	margin: 0px;
+}
+
+.subTitle {
+	font-family: 'magrabold', sans-serif;
+	color: #FFFFFF;
+	text-transform: uppercase;
+	margin: 0px;
+}
+
+.default {
+	font-family: 'magraregular', sans-serif;
+	font-size: 13px;
+	color: #ffffff;
+	margin: 0px;
+}
+
+.bold {
+	font-family: 'magrabold', sans-serif;
+	margin: 0px;
+}
+
+.regular {
+	font-family: 'magraregular', sans-serif;
+	margin: 0px;
+}
+
+.underline {
+	text-decoration: underline;
+}
+
+.uppercase {
+text-transform: uppercase;
+}
+
+.padding {
+	padding: 10px 14px;
+}
+
+.noGlow {
+	text-shadow: 0 0 0 #000000;
+}
+
+.glow {
+	text-shadow: 1px 1px 3px #ffffff;
+}
+
+.glowHover:hover {
+	text-shadow: 1px 1px 3px #ffffff;
+}

@@ -1,0 +1,151 @@
+/* Main Page */
+#heroHolder {
+	margin: auto;
+    width: 960px;
+}
+
+.iconHolder {
+	float: left;
+	margin: 5px 5px 10px;
+	border-radius: 6px;
+	width: 308px;
+	position: relative;
+	min-height: 59px;
+}
+
+.iconHolder:hover {
+	text-decoration: none !important;
+}
+
+.icon {
+	position: absolute;
+	width: 50px;
+	height: 50px;
+	background-size: 50px;
+	margin: 5px 0px 0px 5px;
+}
+
+.iconHolder .title {
+    border-radius: 6px 6px 0 0;
+    padding: 2px 6px 2px 64px;
+}
+
+
+.iconHolder .default {
+    padding: 4px 6px 2px 64px;
+}
+
+.question {
+	top: 10px;
+	right: 10px;
+}
+
+td {
+	vertical-align: top;
+}
+
+.mini {
+	border-radius: 6px 6px 6px 6px;
+	display: block;
+	float: left;
+	height: 53px;
+	margin: 0 0 5px -3px;
+	position: relative;
+	width: 329px;
+}
+
+/* New View */
+.gridView .gDark p {
+    padding: 2px 13px;
+}
+
+.sectionHeroes {
+	border-radius: 6px;
+	margin: 10px;
+	width: 434px;
+}
+
+.sectionHeroes .gDark {
+	border-radius: 6px 6px 0 0;
+    width: 100%;
+}
+
+.noSelect, .select {
+	float: left;
+	position: relative;
+	height: 48px;
+	width: 48px;
+	border: 1px solid #000000;
+	margin: 2px;
+	cursor: pointer;
+}
+
+.select:hover {
+	border: 1px solid #2d85a1;
+}
+
+.noSelect:hover {
+	border: 1px solid #101010;
+}
+
+.heroIcon {
+	background-color: red;
+	float: left;
+	height: 48px;
+	width: 48px;
+	background-size: 100% auto;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+}
+
+.noSelect .darken {
+	background-color: #000000;
+	opacity: 0.8;
+	filter:Alpha(opacity=80);
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+}
+
+.over {
+	display: none;
+	position: absolute;
+	width: 70px;
+    border-radius: 6px 6px 6px 6px;
+    left: -22px;
+	top: 48px;
+	text-align: center;
+    padding: 5px 10px;    
+    z-index: 2;
+}
+
+.select:hover .over {
+	background: #2d85a1; /* Old browsers */
+	background: -moz-linear-gradient(top, #2d85a1 0%, #0a6380 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#2d85a1), color-stop(100%,#0a6380)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #2d85a1 0%,#0a6380 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #2d85a1 0%,#0a6380 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #2d85a1 0%,#0a6380 100%); /* IE10+ */
+	background: linear-gradient(to bottom, #2d85a1 0%,#0a6380 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2d85a1', endColorstr='#0a6380',GradientType=0 ); /* IE6-9 */
+	display: block;
+}
+
+.noSelect:hover .over {
+	background-color: #101010; /* Old browsers */
+	display: block;
+}
+
+/* THE BUTTOM SPACE */
+.fetchPlayer {
+	height: 27px;
+	width: 285px;
+}
+	
+.listedDD, .startingDD {
+	width: 195px;
+	margin-right: 10px;
+}

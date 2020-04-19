@@ -1,0 +1,125 @@
+{% extends 'honete/homehon.html' %}
+{% load static %}
+{% block content_left %}
+<div class="stats_table">
+
+    <div>
+        <span class="stat_title">Estadísticas Hellbourne</span>
+        <table class="stats_table">
+            <thead class="headerTitle title gDark">
+                <tr>
+                    <th>Jugador</th>
+                    <th>Dir IP</th>
+                    <th>Heroe</th>
+                    <th>Kills</th>
+                    <th>Muertes</th>
+                    <th>Asistencias</th>
+                    <th>FirstBlood Kill</th>
+                    <th>FirstBlood Die</th>
+                    <th>Daño</th>
+                    <th>Oro</th>
+                    <th>EXP</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for player in players|dictsortreversed:"kills" %}
+            {% if player.team == 1 %}
+                <tr>
+                    <td>{{player.player}}</td>
+                    <td>{{player.ip_address}}</td>
+                    <td>
+                        {% if player.hero %}
+                        <a href="{% url 'heros_view' player.hero.id }}">{{player.hero}}</a>
+                        {% else %}
+                        No identificado
+                        {% endif %}
+                    </td>
+                    <td class="text-center">{{player.kills}}</td>
+                    <td class="text-center">{{player.dead}}</td>
+                    <td class="text-center">{{player.assitances}}</td>
+                    <td class="text-center">{{player.firstblood}}</td>
+                    <td class="text-center">{{player.firstblood_die}}</td>
+                    <td class="text-center">{{player.damage}}</td>
+                    <td class="text-center">{{player.golds}}</td>
+                    <td class="text-center">{{player.experiens}}</td>
+                </tr>
+            {% endif %}
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <br/>
+    <div>
+        <span class="stat_title">Estadísticas Legion</span>
+        <table class="stats_table">
+            <thead class="headerTitle title gDark">
+                <tr>
+                    <th>Jugador</th>
+                    <th>Dir IP</th>
+                    <th>Héroe</th>
+                    <th>Kills</th>
+                    <th>Muertes</th>
+                    <th>Asistencias</th>
+                    <th>FirstBlood Kill</th>
+                    <th>FirstBlood Die</th>
+                    <th>Daño</th>
+                    <th>Oro</th>
+                    <th>EXP</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for player in players|dictsortreversed:"kills" %}
+            {% if player.team == 2 %}
+                <tr>
+                    <td>{{player.player}}</td>
+                    <td>{{player.ip_address}}</td>
+                    <td>
+                        {% if player.hero %}
+                        <a href="{% url 'heros_view' player.hero.id }}">{{player.hero}}</a>
+                        {% else %}
+                        No identificado
+                        {% endif %}</td>
+                    <td class="text-center">{{player.kills}}</td>
+                    <td class="text-center">{{player.dead}}</td>
+                    <td class="text-center">{{player.assitances}}</td>
+                    <td class="text-center">{{player.firstblood}}</td>
+                    <td class="text-center">{{player.firstblood_die}}</td>
+                    <td class="text-center">{{player.damage}}</td>
+                    <td class="text-center">{{player.golds}}</td>
+                    <td class="text-center">{{player.experiens}}</td>
+                </tr>
+            {% endif %}
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock content_left %}
+{% block content_right %}
+    <div class="gLight" id="summary" style="margin-top: 20px;">
+        <div class="headerTitle title fontXL gDark" style="border-radius: 6px 6px 0 0;">Match Summary</div>
+        <div id="info">
+            <div class="column left subTitle fontXS">
+                Ganador:<br>
+                Match ID:<br>
+                Mapa:<br>
+                Fecha:<br>
+                Hora:<br>
+                Duración:<br>
+                Servidor:<br>
+                Versión:
+            </div>
+            <div class="column right regular greyLight fontXS">
+                - {% if game.team_win == 1 %}Hellbourne{% else %} Legion {% endif %}<br>
+                - {{game.match_id}}<br>
+                - {{game.map_name}}<br>
+                - {{game.match_date}}<br>
+                - {{game.match_time}}<br>
+                - {{game.win_time}}<br>
+                - {{game.server_game_name}}<br>
+                - {{game.game_version}}
+            </div>
+            <div style="clear: both;"></div>
+        </div>
+    </div>
+{% endblock content_right %}

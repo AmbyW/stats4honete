@@ -1,0 +1,24 @@
+{% extends 'honete/homehon.html' %}
+{% load static %}
+    {% block content %}
+<div>
+</div>
+<table>
+    <thead>
+        <tr>
+            <th>numero</th>
+            <th>Nombre</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for player in players %}
+        <tr>
+            <td>{{player.id}}</td>
+            <td>{{player.name}}</td>
+        </tr>
+    {% empty %}
+    <tr>No hay subido ningun juego</tr>
+    {% endfor %}
+    </tbody>
+</table>
+    {% endblock content %}

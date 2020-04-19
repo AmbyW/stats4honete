@@ -43,10 +43,10 @@
         </thead>
         <tbody>
         {% for player in players|dictsortreversed:"avg" %}
-        <tr>
+        <tr class="{% if forloop.first %}first-row {% elif forloop.last %} last-row {% elif player.avg <= 0 %} inred-row {% endif %}">
             <td class="text-center">{{forloop.counter}}</td>
             <td>{{player.name}}</td>
-            <td class="text-center {% if player.avg < 0 %}text-danger{% endif %}">{{player.avg|floatformat:2}}</td>
+            <td class="text-center">{{player.avg|floatformat:2}}</td>
             <td class="text-center">{{player.games}}</td>
             <td class="text-center">{{player.kills}}</td>
             <td class="text-center">{{player.deads}}</td>
@@ -54,9 +54,9 @@
             <td class="text-center">{{player.first_kills}}</td>
             <td class="text-center">{{player.first_dies}}</td>
             <td class="text-center">{{player.wins}}</td>
-            <td class="text-center">{{player.golds}}</td>
-            <td class="text-center">{{player.experienc}}</td>
-            <td class="text-center">{{player.damage}}</td>
+            <td class="text-center">{{player.golds|floatformat:2}}</td>
+            <td class="text-center">{{player.experienc|floatformat:2}}</td>
+            <td class="text-center">{{player.damage|floatformat:2}}</td>
         </tr>
         {% empty %}
         <tr><h3>No hay estadísticas de juegos</h3></tr>

@@ -40,10 +40,10 @@
         </thead>
         <tbody>
         {% for player in players|dictsortreversed:"avg" %}
-        <tr>
+        <tr class="{% if forloop.first %}first-row {% elif forloop.last %} last-row {% elif player.avg <= 0 %} inred-row {% endif %}">
             <td class="text-center">{{forloop.counter}}</td>
             <td>{{player.name}}</td>
-            <td class="text-center {% if player.avg < 0 %}text-danger{% endif %}">{{player.avg|floatformat:2}}</td>
+            <td class="text-center">{{player.avg|floatformat:2}}</td>
             <td class="text-center">{{player.games}}</td>
             <td class="text-center">{{player.kills}}</td>
             <td class="text-center">{{player.deads}}</td>

@@ -1,1 +1,5 @@
-{% extends 'honete/base.html' %}
+{% extends 'honete/base.html' %}\
+{% load static %}
+{% block page_style %}
+    <link href="{% static 'honete/css/honete.css' %}" rel="stylesheet" type="text/css">
+{% endblock page_style %}

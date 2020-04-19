@@ -110,10 +110,14 @@ class Skill(models.Model):
 
 class Hero(models.Model):
     name = models.CharField(max_length=50, verbose_name='Nombre', help_text='Nombre del h€roe que se muestra.')
-    slug = models.CharField(max_length=50, verbose_name='Slug', help_text='Nombre con que se identifica el h€roe en los logs.')
-    team = models.IntegerField(choices=TEAM_TYPE_CHOISE, default=1, verbose_name='Equipo', help_text='Equipo o Facción al que pertenece el héroe.')
-    type = models.IntegerField(choices=HERO_TYPE_CHOISE, verbose_name='Tipo', help_text='Tipo del héroe')
-    atack = models.IntegerField(choices=ATTACK_TYPE_CHOISE, verbose_name='Ataca')
+    slug = models.CharField(max_length=50, verbose_name='Slug',
+                            help_text='Nombre con que se identifica el h€roe en los logs.')
+    team = models.ForeignKey(TypeTeam, default='', on_delete=models.CASCADE,
+                             verbose_name='Equipo', help_text='Equipo o Facción al que pertenece el héroe.')
+    type = models.ForeignKey(TypeHero, default='', on_delete=models.CASCADE,
+                             verbose_name='Tipo', help_text='Tipo del héroe')
+    atack = models.ForeignKey(TypeAttack, verbose_name='Ataca', on_delete=models.CASCADE,
+                              help_text='Si el héroe ataca de rango o no')
     image = models.ImageField('Avatar', upload_to=scramble_upload_avatar, help_text='Avatar del héroe, que se muestra en la lista.', default=None, null=True)
     background = models.ImageField('Background', upload_to=scramble_upload_background, help_text='Background mostrado en la pagina de detalles del héroe.', default='')
     detail_pic = models.ImageField('Detalle', upload_to=scramble_upload_detail, help_text="Imagen con una descripción del héroe, sus habilidades y recomendaciones.", default='')

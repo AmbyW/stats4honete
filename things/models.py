@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils.translation import ugettext_lazy as _
 from django.db.models import Q, F
 from django.core.exceptions import ValidationError, MultipleObjectsReturned
 import uuid
@@ -51,6 +52,15 @@ def scramble_upload_background(instance, filename, subdiretory='background'):
 def scramble_upload_detail(instance, filename, subdiretory='detail_pic'):
     ext = filename.split('.')[-1]
     return subdiretory+'/{}.{}'.format(uuid.uuid4(), ext)
+
+
+class TypeTeam(models.Model):
+    name = models.CharField(verbose_name=_('Facción'), max_length=25, null=False, blank=False, unique=True)
+    code = models.CharField(verbose_name=_('Código'), max_length=1, null=False, blank=False, unique=True)
+
+    class Meta:
+        verbose_name = _('Facción')
+        verbose_name_plural = _('Facciones')
 
 
 class Player(models.Model):

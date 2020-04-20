@@ -9,22 +9,6 @@ import datetime
 
 
 # Create your models here.
-HERO_TYPE_CHOISE = (
-    {1, 'AGILIDAD'},
-    {2, 'FUERZA'},
-    {3, 'INTELIGENCIA'},
-)
-
-ATTACK_TYPE_CHOISE = (
-    {1, 'MELEE'},
-    {2, 'RANGO'},
-)
-
-TEAM_TYPE_CHOISE = (
-    {1, 'HELLBOURNE'},
-    {2, 'LEGION'},
-)
-
 ITEM_CHOISE = (
     {1, 'STARTING'},
     {2, 'MEDIUM'},
@@ -62,6 +46,9 @@ class TypeTeam(models.Model):
         verbose_name = _('Facción')
         verbose_name_plural = _('Facciones')
 
+    def __str__(self):
+        return self.name
+
 
 class TypeHero(models.Model):
     name = models.CharField(verbose_name=_('Tipo de Héroe'), max_length=25, null=False, blank=False, unique=True)
@@ -71,6 +58,9 @@ class TypeHero(models.Model):
         verbose_name = _('Tipo de Héroe')
         verbose_name_plural = _('Tipos de Héroes')
 
+    def __str__(self):
+        return self.name
+
 
 class TypeAttack(models.Model):
     name = models.CharField(verbose_name=_('Tipo de Ataque'), max_length=25, null=False, blank=False, unique=True)
@@ -79,6 +69,9 @@ class TypeAttack(models.Model):
     class Meta:
         verbose_name = _('Tipo de Ataque')
         verbose_name_plural = _('Tipos de Ataques')
+
+    def __str__(self):
+        return self.name
 
 
 class Player(models.Model):
@@ -118,9 +111,13 @@ class Hero(models.Model):
                              verbose_name='Tipo', help_text='Tipo del héroe')
     atack = models.ForeignKey(TypeAttack, verbose_name='Ataca', on_delete=models.CASCADE,
                               help_text='Si el héroe ataca de rango o no')
-    image = models.ImageField('Avatar', upload_to=scramble_upload_avatar, help_text='Avatar del héroe, que se muestra en la lista.', default=None, null=True)
-    background = models.ImageField('Background', upload_to=scramble_upload_background, help_text='Background mostrado en la pagina de detalles del héroe.', default='')
-    detail_pic = models.ImageField('Detalle', upload_to=scramble_upload_detail, help_text="Imagen con una descripción del héroe, sus habilidades y recomendaciones.", default='')
+    image = models.ImageField('Avatar', upload_to=scramble_upload_avatar,
+                              help_text='Avatar del héroe, que se muestra en la lista.', default=None, null=True)
+    background = models.ImageField('Background', upload_to=scramble_upload_background,
+                                   help_text='Background mostrado en la pagina de detalles del héroe.', default='')
+    detail_pic = models.ImageField('Detalle', upload_to=scramble_upload_detail,
+                                   help_text="Imagen con una descripción del héroe, sus habilidades y recomendaciones.",
+                                   default='')
     skills = models.ForeignKey(Skill, blank=True, default='', on_delete=models.SET_DEFAULT, verbose_name="habilidades")
 
     def __str__(self):
@@ -154,7 +151,7 @@ class Game(models.Model):
     match_date = models.DateField(auto_now_add=False, blank=True, null=True)
     match_time = models.TimeField(auto_now_add=False, blank=True, null=True)
     log_file = models.FileField('Archivo Log', upload_to=scramble_upload_log)
-    team_win = models.PositiveSmallIntegerField(null=True, blank=True, default=0)
+    team_win = models.ForeignKey(TypeTeam, on_delete=models.CASCADE, null=True, blank=True, default='')
     win_time = models.PositiveIntegerField(null=True, blank=True, default=0)
 
     players_onplay = models.ManyToManyField(Player, related_name='players_onplay', through='PlayersGame', blank=True)
@@ -253,13 +250,14 @@ class Game(models.Model):
 
     def parse_teamchange(self, line):
         l1 = line.split(":")
+        team = TypeTeam.objects.filter(code=l1[-1].replace('\n', '')).first()
         try:
             pop = self.playersgame_set.update_or_create(game=self,
                                                         player_pos=l1[1].split(' ')[0],
-                                                        defaults={'team': l1[-1]})
+                                                        defaults={'team': team})
         except MultipleObjectsReturned as e:
             pop = self.playersgame_set.filter(game=self, player_pos=l1[1].split(' ')[0],).first()
-            pop.team = l1[-1]
+            pop.team = team
             pop.save()
 
     def parse_kill(self, line):
@@ -411,7 +409,8 @@ class Game(models.Model):
         for l in endlines:
             if 'GAME_END' in l:
                 is_finish = True
-                self.team_win = int(l.split('\"')[-2])
+                team = TypeTeam.objects.filter(code=l.split('\"')[-2]).first()
+                self.team_win = team
                 self.win_time = int(l.split(':')[1].split(' ')[0])
         if not is_finish:
             self.delete()
@@ -446,8 +445,8 @@ class PlayersGame(models.Model):
     hero = models.ForeignKey(Hero, on_delete=models.CASCADE, blank=True, null=True)
     player = models.ForeignKey(Player, on_delete=models.CASCADE)
     player_pos = models.IntegerField(default=100, blank=True, null=True)
-    team = models.IntegerField(default=0, blank=True, null=True)
-    game = models.ForeignKey(Game, on_delete=models.CASCADE)
+    team = models.ForeignKey(TypeTeam, on_delete=models.CASCADE, default='', blank=True, null=True)
+    game = models.ForeignKey(Game, on_delete=models.CASCADE, default='')
     kills = models.PositiveIntegerField(blank=True, null=True, default=0)
     dead = models.PositiveIntegerField(blank=True, null=True, default=0)
     experiens = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True, default=0)
@@ -465,7 +464,7 @@ class PlayersGame(models.Model):
         verbose_name_plural = 'Jugadores en Juego'
 
     def check_have_data(self):
-        if self.damage == 0 and self.assitances == 0 and self.golds == 0 and self.experiens == 0 and self.dead == 0 and self.kills == 0 and self.team == 0 and self.firstblood == '':
+        if self.damage == 0 and self.assitances == 0 and self.golds == 0 and self.experiens == 0 and self.dead == 0 and self.kills == 0 and self.team == '' and self.firstblood == '':
             return False
         else:
             return True

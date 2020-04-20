@@ -113,12 +113,12 @@ class Hero(models.Model):
                               help_text='Si el héroe ataca de rango o no')
     image = models.ImageField('Avatar', upload_to=scramble_upload_avatar,
                               help_text='Avatar del héroe, que se muestra en la lista.', default=None, null=True)
-    background = models.ImageField('Background', upload_to=scramble_upload_background,
+    background = models.ImageField('Background', upload_to=scramble_upload_background, null=True,
                                    help_text='Background mostrado en la pagina de detalles del héroe.', default='')
-    detail_pic = models.ImageField('Detalle', upload_to=scramble_upload_detail,
+    detail_pic = models.ImageField('Detalle', upload_to=scramble_upload_detail, null=True,
                                    help_text="Imagen con una descripción del héroe, sus habilidades y recomendaciones.",
                                    default='')
-    skills = models.ForeignKey(Skill, blank=True, default='', on_delete=models.SET_DEFAULT, verbose_name="habilidades")
+    skills = models.ManyToManyField(Skill, blank=True, default='', verbose_name="habilidades")
 
     def __str__(self):
         return self.name

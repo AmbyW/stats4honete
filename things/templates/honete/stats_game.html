@@ -23,7 +23,7 @@
             </thead>
             <tbody>
             {% for player in players|dictsortreversed:"kills" %}
-            {% if player.team == 1 %}
+            {% if player.team.code == "1" %}
                 <tr>
                     <td>{{player.player}}</td>
                     <td>{{player.ip_address}}</td>
@@ -69,7 +69,7 @@
             </thead>
             <tbody>
             {% for player in players|dictsortreversed:"kills" %}
-            {% if player.team == 2 %}
+            {% if player.team.code == "2" %}
                 <tr>
                     <td>{{player.player}}</td>
                     <td>{{player.ip_address}}</td>

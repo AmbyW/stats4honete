@@ -77,9 +77,8 @@ def game_delete_all(request):
 
 
 def stats_game(request, id_game):
-    gameplays = PlayersGame.objects.filter(game_id=id_game)
     game = Game.objects.filter(id=id_game).first()
-    return render(request, 'honete/stats_game.html', {'players': gameplays, 'game': game})
+    return render(request, 'honete/stats_game.html', {'players': game.playersgame_set.all(), 'game': game})
 
 
 def player_list(request):

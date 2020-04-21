@@ -6,7 +6,7 @@ from django.core.exceptions import ValidationError, MultipleObjectsReturned
 import uuid
 from statshon import settings
 import datetime
-
+import time
 
 # Create your models here.
 ITEM_CHOISE = (
@@ -16,6 +16,8 @@ ITEM_CHOISE = (
     {2, 'OPTIONALS'},
     {2, 'FULLPOWER'},
 )
+
+NUM_WORKERS = 6
 
 
 def scramble_upload_avatar(instance, filename, subdiretory='avatar_hero'):
@@ -177,7 +179,12 @@ class Game(models.Model):
                 lineu = line.encode('utf-8').decode('utf-8').replace('\x00', '')
                 data.append(lineu)
 
+        start_in = 0
+        step = len(data)//NUM_WORKERS
+        stop_in = start_in + step
+
         f.close()
+        start_time = time.time()
         for l in data:
             if 'INFO_DATE' in l:
                 self.parse_datetime(l)
@@ -208,6 +215,8 @@ class Game(models.Model):
                 self.parse_gold_less(l)
             if str(l).startswith('DAMAGE'):
                 self.parse_damage(l)
+        end_time = time.time()
+        print("Used time=", end_time - start_time)
 
     def parse_info_game(self, line):
         l = line.split("\"")

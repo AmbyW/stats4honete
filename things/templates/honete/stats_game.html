@@ -1,5 +1,5 @@
 {% extends 'honete/homehon.html' %}
-{% load static %}
+{% load static things_tags %}
 {% block content_left %}
 <div class="stats_table">
 
@@ -37,8 +37,8 @@
                     <td class="text-center">{{player.kills}}</td>
                     <td class="text-center">{{player.dead}}</td>
                     <td class="text-center">{{player.assitances}}</td>
-                    <td class="text-center">{{player.firstblood}}</td>
-                    <td class="text-center">{{player.firstblood_die}}</td>
+                    <td class="text-center">{% if player.firstblood > "0" %}{{player.firstblood|int_time}} {% else %}-{% endif %}</td>
+                    <td class="text-center">{% if player.firstblood_die > "0" %}{{player.firstblood_die|int_time}}{% else %}-{% endif %}</td>
                     <td class="text-center">{{player.damage}}</td>
                     <td class="text-center">{{player.golds}}</td>
                     <td class="text-center">{{player.experiens}}</td>
@@ -82,8 +82,8 @@
                     <td class="text-center">{{player.kills}}</td>
                     <td class="text-center">{{player.dead}}</td>
                     <td class="text-center">{{player.assitances}}</td>
-                    <td class="text-center">{{player.firstblood}}</td>
-                    <td class="text-center">{{player.firstblood_die}}</td>
+                    <td class="text-center">{% if player.firstblood > "0" %}{{player.firstblood|int_time}} {% else %}-{% endif %}</td>
+                    <td class="text-center">{% if player.firstblood_die > "0" %}{{player.firstblood_die|int_time}}{% else %}-{% endif %}</td>
                     <td class="text-center">{{player.damage}}</td>
                     <td class="text-center">{{player.golds}}</td>
                     <td class="text-center">{{player.experiens}}</td>
@@ -115,7 +115,7 @@
                 - {{game.map_name}}<br>
                 - {{game.match_date}}<br>
                 - {{game.match_time}}<br>
-                - {{game.win_time}}<br>
+                - {{game.win_time|int_time}}<br>
                 - {{game.server_game_name}}<br>
                 - {{game.game_version}}
             </div>

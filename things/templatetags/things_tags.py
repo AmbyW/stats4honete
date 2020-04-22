@@ -15,3 +15,21 @@ def thing_time(value):
         value = int(value)
         return mark_safe(value)
     return value
+
+
+@register.filter
+@stringfilter
+def int_time(value):
+    if not value:
+        return ''
+    try:
+        int_value = int(value)
+        total_sec = int_value // 1000
+        milisec = int_value % 1000
+        total_min = total_sec // 60
+        sec = total_sec % 60
+        hour = total_min // 60
+        min = total_min % 60
+        return "{}:{}:{}.{}".format(hour, min, sec, milisec)
+    except ValueError as e:
+        return value

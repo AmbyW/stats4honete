@@ -5,8 +5,10 @@ from django.db.models import Q, F
 from django.core.exceptions import ValidationError, MultipleObjectsReturned
 import uuid
 from statshon import settings
+from things.utils import ParserPlayerGame, ParserGame, parse_data
 import datetime
 import time
+import threading
 
 # Create your models here.
 ITEM_CHOISE = (
@@ -166,8 +168,8 @@ class Game(models.Model):
         verbose_name = 'Juego'
         verbose_name_plural = 'Juegos'
 
-    def parse_log_data(self):
-        b = 0
+    def parse_c_log_data(self):
+
         try:
             f = open(settings.MEDIA_ROOT + '/' + str(self.log_file), 'r', encoding='utf-8')
             data = f.readlines()
@@ -179,260 +181,73 @@ class Game(models.Model):
                 lineu = line.encode('utf-8').decode('utf-8').replace('\x00', '')
                 data.append(lineu)
 
+        start_time = time.time()
         start_in = 0
-        step = len(data)//NUM_WORKERS
+        step = len(data) // NUM_WORKERS
         stop_in = start_in + step
 
-        f.close()
-        start_time = time.time()
-        for l in data:
-            if 'INFO_DATE' in l:
-                self.parse_datetime(l)
-            if 'INFO_GAME' in l:
-                self.parse_info_game(l)
-            if 'INFO_MATCH' in l:
-                self.parse_info_match(l)
-            if 'INFO_MAP' in l:
-                self.parse_info_map(l)
-            if 'INFO_SERVER' in l:
-                self.parse_info_server(l)
-            if str(l).startswith('GAME_START'):
-                self.parse_start(data[-3:])
-            if str(l).startswith('PLAYER_CONNECT'):
-                print(l)
-                self.parse_player_conn(l)
-            if str(l).startswith('PLAYER_TEAM_CHANGE'):
-                self.parse_teamchange(l)
-            if str(l).startswith('KILL'):
-                self.parse_kill(l)
-            if str(l).startswith('AWARD_FIRST_BLOOD'):
-                self.parse_first(l)
-            if str(l).startswith('EXP_EARNED'):
-                self.parse_exp(l)
-            if str(l).startswith('GOLD_EARNED'):
-                self.parse_gold_plus(l)
-            if str(l).startswith('GOLD_LOST'):
-                self.parse_gold_less(l)
-            if str(l).startswith('DAMAGE'):
-                self.parse_damage(l)
+        threads = []
+        game_data = ParserGame()
+        for _ in range(NUM_WORKERS):
+            threads.append(threading.Thread(target=parse_data,
+                                            args=(data, game_data, ),
+                                            kwargs={'start': int(start_in),
+                                                    'end': int(stop_in)}))
+            start_in += step
+            stop_in += step
+            print(stop_in, "lineas" )
+        [thread.start() for thread in threads]
+        [thread.join() for thread in threads]
         end_time = time.time()
-        print("Used time=", end_time - start_time)
+        print("Threads time=", end_time - start_time)
+        if self.verify_parse(game_data):
+            self.save_parse(game_data)
 
-    def parse_info_game(self, line):
-        l = line.split("\"")
-        self.game_name = l[1]
-        self.game_version = l[3]
-
-    def parse_info_match(self, line):
-        l = line.split("\"")
-        self.match_name = l[1]
-        self.match_id = l[3]
-
-    def parse_info_map(self, line):
-        l = line.split("\"")
-        self.map_name = l[1]
-        self.map_version = l[3]
-
-    def parse_info_server(self, line):
-        l = line.split("\"")
-        self.server_game_name = l[1]
-
-    def parse_player_conn(self, line):
-        l1 = line.split("\"")
-        l2 = line.split(":")
-        print('l1', l1)
-        print('l2', l2)
-        player_pos = ''
-        for u in range(len(l2)):
-            if 'player' in l2[u]:
-                player_pos = l2[u+1].split(' ')[0]
-                print('pos', player_pos)
-        player = Player.objects.get_or_create(name=l1[1])[0]
-        print('pl', player)
-        pop, created = self.playersgame_set.get_or_create(player=player, game=self, defaults={'ip_address': l1[3],
-                                                                                              'player_pos': player_pos})
-        print('pop', pop)
-        pop.ip_address = l1[3]
-        print('addr', l1[3])
-        pop.player_pos = player_pos
-        pop.save()
-
-    def parse_teamchange(self, line):
-        l1 = line.split(":")
-        team = TypeTeam.objects.filter(code=l1[-1].replace('\n', '')).first()
-        try:
-            pop = self.playersgame_set.update_or_create(game=self,
-                                                        player_pos=l1[1].split(' ')[0],
-                                                        defaults={'team': team})
-        except MultipleObjectsReturned as e:
-            pop = self.playersgame_set.filter(game=self, player_pos=l1[1].split(' ')[0],).first()
-            pop.team = team
-            pop.save()
-
-    def parse_kill(self, line):
-        who_kill = ''
-        hero_kill = ''
-        hero_die = ''
-        who_die = ''
-        who_assist = []
-        l = line.split(":")
-        for u in range(len(l)):
-            if 'player' in l[u]:
-                who_kill = l[u+1].split(' ')[0]
-            if 'owner' in l[u]:
-                who_die = l[u+1].split(' ')[0]
-            if 'assists' in l[u]:
-                who_assist = l[u+1].replace('\n', '').split(',')
-            if 'target' in l[u]:
-                hero_die = l[u+1].replace('"', '').split(' ')[0]
-            if 'attacker' in l[u]:
-                hero_kill = l[u+1].replace('"', '').split(' ')[0]
-        if hero_die.startswith('Hero_') and hero_kill.startswith('Hero_'):
-            pop = PlayersGame.objects.filter(game=self).filter(player_pos=who_kill).first()
-            pop.kills += 1
-            if not pop.hero:
-                pop.hero = Hero.objects.filter(slug=hero_kill).first()
-            pop.save()
-            pop = PlayersGame.objects.filter(game=self).filter(player_pos=who_die).first()
-            pop.dead += 1
-            if not pop.hero:
-                pop.hero = Hero.objects.filter(slug=hero_die).first()
-            pop.save()
-            for asister in who_assist:
-                pop = PlayersGame.objects.filter(game=self).filter(player_pos=asister).first()
-                pop.assitances += 1
-                pop.save()
-        if hero_die.startswith('Hero_') and not hero_kill.startswith('Hero_'):
-            pop = PlayersGame.objects.filter(game=self).filter(player_pos=who_die).first()
-            pop.dead += 1
-            if not pop.hero:
-                pop.hero = Hero.objects.filter(slug=hero_die).first()
-            pop.save()
-            if hero_kill.startswith('Gadget_Assist'):
-                pop = PlayersGame.objects.filter(game=self).filter(player_pos=who_kill).first()
-                pop.kills += 1
-                pop.save()
-            for asister in who_assist:
-                pop = PlayersGame.objects.filter(game=self).filter(player_pos=asister).first()
-                pop.assitances += 1
-                pop.save()
-
-    def parse_first(self, line):
-        l = line.split(":")
-        player_pos = ''
-        player_die_pos = ''
-        hero_slug = ''
-        time = ''
-        for u in range(len(l)):
-            if 'time' in l[u]:
-                time = l[u+1].split(' ')[0]
-            if 'player' in l[u]:
-                player_pos = l[u+1].split(' ')[0]
-            if 'owner' in l[u]:
-                player_die_pos = l[u+1].split(' ')[0]
-            if 'name' in l[u]:
-                hero_slug = l[u+1].replace('"', '').split(' ')[0]
-        if player_pos != '':
-            pop = PlayersGame.objects.filter(game=self, player_pos=player_pos).first()
-            pop.firstblood = time
-            if not pop.hero and hero_slug != '':
-                pop.hero = Hero.objects.filter(slug=hero_slug).first()
-            pop.save()
-        if player_die_pos != '':
-            pop = PlayersGame.objects.filter(game=self, player_pos=player_die_pos).first()
-            pop.firstblood_die = time
-            pop.save()
-
-    def parse_gold_plus(self, line):
-        l = line.split(":")
-        player_pos = ''
-        gold = ''
-        for u in range(len(l)):
-            if 'player' in l[u]:
-                player_pos = l[u+1].split(' ')[0]
-            if 'gold' in l[u]:
-                gold = l[u+1].split(' ')[0]
-        gold = gold.replace('\n', '')
-        if player_pos != '':
-            pop = PlayersGame.objects.filter(game=self, player_pos=player_pos).first()
-            pop.golds += float(gold)
-            pop.save()
-
-    def parse_gold_less(self, line):
-        l = line.split(":")
-        player_pos = ''
-        gold = ''
-        for u in range(len(l)):
-            if 'player' in l[u]:
-                player_pos = l[u+1].split(' ')[0]
-            if 'gold' in l[u]:
-                gold = l[u+1].split(' ')[0]
-        gold = gold.replace('\n', '')
-        if player_pos != '':
-            pop = PlayersGame.objects.filter(game=self, player_pos=player_pos).first()
-            pop.golds -= float(gold)
-            pop.save()
-
-    def parse_damage(self, line):
-        l = line.split(":")
-        player_pos = ''
-        damage = ''
-        hero = ''
-        for u in range(len(l)):
-            if 'player' in l[u]:
-                player_pos = l[u+1].split(' ')[0]
-            if 'damage' in l[u]:
-                damage = l[u+1].split(' ')[0]
-            if 'attacker' in l[u]:
-                hero = l[u+1].replace('"', '').split(' ')[0]
-        if player_pos != '':
-            pop = PlayersGame.objects.filter(game=self, player_pos=player_pos).first()
-            pop.damage = float(damage)
-            if not pop.hero:
-                pop.hero = Hero.objects.filter(slug=hero).first()
-            pop.save()
-
-    def parse_exp(self, line):
-        l = line.split(":")
-        player_pos = ''
-        exp = ''
-        for u in range(len(l)):
-            if 'player' in l[u]:
-                player_pos = l[u+1].split(' ')[0]
-            if 'experience' in l[u]:
-                exp = l[u+1].split(' ')[0]
-        if player_pos != '':
-            pop = PlayersGame.objects.get(game=self, player_pos=player_pos)
-            pop.experiens = float(exp)
-            pop.save()
-
-    def parse_datetime(self, line):
-        l = line.split("\"")
-        date = l[1]
-        time = l[3]
-        self.match_date = datetime.date(year=int(date.split('/')[0]), month=int(date.split('/')[-1]), day=int(date.split('/')[1]))
-        self.match_time = datetime.time(hour=int(time.split(':')[0]), minute=int(time.split(':')[1]))
-
-    def parse_end(self, endlines):
-        is_finish = False
-        for l in endlines:
-            if 'GAME_END' in l:
-                is_finish = True
-                team = TypeTeam.objects.filter(code=l.split('\"')[-2]).first()
-                self.team_win = team
-                self.win_time = int(l.split(':')[1].split(' ')[0])
-        if not is_finish:
+    def verify_parse(self, data):
+        if len(data.playersgame_set) < 6:
             self.delete()
-            raise ValidationError('El juego no esta terminado', code='endless_game')
-        
-    def parse_start(self, endli):
-        if self.playersgame_set.count() < 6:
+            raise ValidationError(message=_('El log no será salvado porque el juego es de menos de 6 jugadores'))
+        if Game.objects.filter(match_date=data.match_date, match_time=data.match_time, match_id=data.match_id).exists():
             self.delete()
-            raise ValidationError('Menos de los jugadores necesarios', code='few_players')
-        if Game.objects.exclude(id=self.id).filter(match_date=self.match_date, match_time=self.match_time, server_game_name=self.server_game_name).exists():  
-            self.delete()
-            raise ValidationError('Ya a sido subido esta juego', code='already_exist')
-        self.parse_end(endli)
+            raise ValidationError(message=_('El log no será salvado porque ya existe este juego salvado en la base de datos'))
+        return True
+
+    def save_parse(self, data):
+        self.game_name = data.game_name
+        self.game_version = data.game_version
+        self.map_name = data.map_name
+        self.map_version = data.map_version
+        self.match_id = data.match_id
+        self.match_name = data.match_name
+        self.match_date = datetime.date(year=int(data.match_date.split('-')[0]),
+                                        month=int(data.match_date.split('-')[-1]),
+                                        day=int(data.match_date.split('-')[1]))
+        self.match_time = datetime.time(hour=int(data.match_time.split(':')[0]),
+                                        minute=int(data.match_time.split(':')[1]),
+                                        second=int(data.match_time.split(':')[-1]))
+        self.team_win = TypeTeam.objects.filter(code=data.team_win).first()
+        self.win_time = data.win_time
+        self.server_game_name = data.server_game_name
+        for player_on_game in data.playersgame_set:
+            player, created = Player.objects.get_or_create(name=player_on_game.player)
+            team, created = TypeTeam.objects.get_or_create(code=player_on_game.team)
+            hero = Hero.objects.filter(slug=player_on_game.hero).first()
+            playergame = PlayersGame()
+            playergame.player = player
+            playergame.player_pos = player_on_game.player_pos
+            playergame.game = self
+            playergame.team = team
+            playergame.hero = hero
+            playergame.kills = player_on_game.kills
+            playergame.dead = player_on_game.dead
+            playergame.assitances = player_on_game.assitances
+            playergame.golds = player_on_game.golds
+            playergame.experiens = player_on_game.experiens
+            playergame.damage = player_on_game.damage
+            playergame.firstblood = player_on_game.firstblood
+            playergame.firstblood_die = player_on_game.firstblood_die
+            playergame.ip_address = player_on_game.ip_address
+            playergame.save()
 
     def check_parse(self):
         if self.match_time and self.match_name and self.match_id and self.server_game_name and self.game_name and self.map_name and self.players_onplay.count() > 0:
@@ -442,7 +257,7 @@ class Game(models.Model):
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         super(Game, self).save()
-        self.parse_log_data()
+        self.parse_c_log_data()
         if not self.check_parse():
             self.delete()
             raise ValidationError('El archivo log no pudo ser analizado, revise si subió el archivo correcto.')

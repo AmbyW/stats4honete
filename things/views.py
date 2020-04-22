@@ -98,8 +98,10 @@ def stats(request):
                                             golds=Sum('golds'),
                                             assists=Sum('assitances'),
                                             damage=Sum('damage'),
-                                            first_kills=Sum(Case(When(firstblood='', then=0), default=1, output_field=models.IntegerField())),
-                                            first_dies=Sum(Case(When(firstblood_die='', then=0), default=1, output_field=models.IntegerField())),
+                                            first_kills=Sum(Case(When(firstblood=0, then=0), default=1,
+                                                                 output_field=models.IntegerField())),
+                                            first_dies=Sum(Case(When(firstblood_die=0, then=0), default=1,
+                                                                output_field=models.IntegerField())),
                                             wins=Count(Case(When(game__team_win=F('team'), then=1))),
                                             )
         if pog['kills'] != None and pog['deads'] != None and pog['assists'] != None and pog['first_kills'] != None and pog['first_dies'] != None:
@@ -128,8 +130,10 @@ def stats_tmp(request):
                                             golds=Sum('golds'),
                                             assists=Sum('assitances'),
                                             damage=Sum('damage'),
-                                            first_kills=Sum(Case(When(firstblood='', then=0), default=1, output_field=models.IntegerField())),
-                                            first_dies=Sum(Case(When(firstblood_die='', then=0), default=1, output_field=models.IntegerField())),
+                                            first_kills=Sum(Case(When(firstblood=0, then=0), default=1,
+                                                                 output_field=models.IntegerField())),
+                                            first_dies=Sum(Case(When(firstblood_die=0, then=0), default=1,
+                                                                output_field=models.IntegerField())),
                                             wins=Count(Case(When(game__team_win=F('team'), then=1))),
                                             )
         if pog['kills'] != None and pog['deads'] != None and pog['assists'] != None and pog['first_kills'] != None and pog['first_dies'] != None:

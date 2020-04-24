@@ -5,7 +5,7 @@ from django.db.models import Q, F
 from django.core.exceptions import ValidationError, MultipleObjectsReturned
 import uuid
 from statshon import settings
-from things.utils import ParserPlayerGame, ParserGame, parse_data
+from things.utils import ParserGame, parse_data_russian, get_initial_parse_data, select_parser
 import datetime
 import time
 import threading
@@ -182,24 +182,31 @@ class Game(models.Model):
                 data.append(lineu)
 
         start_time = time.time()
-        start_in = 0
+        start_in = get_initial_parse_data(data)
         step = len(data) // NUM_WORKERS
         stop_in = start_in + step
 
         threads = []
         game_data = ParserGame()
-        for _ in range(NUM_WORKERS):
-            threads.append(threading.Thread(target=parse_data,
-                                            args=(data, game_data, ),
-                                            kwargs={'start': int(start_in),
-                                                    'end': int(stop_in)}))
-            start_in += step
-            stop_in += step
-            print(stop_in, "lineas")
-        [thread.start() for thread in threads]
-        [thread.join() for thread in threads]
-        end_time = time.time()
-        print("Threads time=", end_time - start_time)
+        parser, text = select_parser(data[:8])
+        if parser == 0:
+            parse_data_russian(data[:start_in+1], game_data)
+            for _ in range(NUM_WORKERS):
+                threads.append(threading.Thread(target=parse_data_russian,
+                                                args=(data, game_data, ),
+                                                kwargs={'start': int(start_in),
+                                                        'end': int(stop_in)}))
+                start_in += step
+                stop_in += step
+                print(stop_in, "lineas")
+            [thread.start() for thread in threads]
+            [thread.join() for thread in threads]
+            end_time = time.time()
+            print("Threads time=", end_time - start_time)
+        elif parser == 1:
+            pass
+        else:
+            game_data.delete()
         if self.verify_parse(game_data):
             self.save_parse(game_data)
             game_data.delete()
@@ -283,12 +290,12 @@ class PlayersGame(models.Model):
     game = models.ForeignKey(Game, on_delete=models.CASCADE, default='')
     kills = models.PositiveIntegerField(blank=True, null=True, default=0)
     dead = models.PositiveIntegerField(blank=True, null=True, default=0)
-    experiens = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True, default=0)
-    golds = models.IntegerField(blank=True, null=True, default=0)
+    experiens = models.DecimalField(max_digits=21, decimal_places=10, blank=True, null=True, default=0)
+    golds = models.DecimalField(max_digits=21, decimal_places=10, blank=True, null=True, default=0)
     assitances = models.PositiveIntegerField(blank=True, null=True, default=0)
-    damage = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True, default=0)
-    firstblood = models.CharField(max_length=10, blank=True, null=True, default='')
-    firstblood_die = models.CharField(max_length=10, blank=True, null=True, default='')
+    damage = models.DecimalField(max_digits=21, decimal_places=10, blank=True, null=True, default=0)
+    firstblood = models.PositiveIntegerField(blank=True, null=True, default=0)
+    firstblood_die = models.PositiveIntegerField(blank=True, null=True, default=0)
 
     def __str__(self):
         return '{}'.format(self.player)

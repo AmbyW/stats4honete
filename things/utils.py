@@ -5,6 +5,7 @@ import threading
 NUM_WORKERS = 6
 
 
+# ------Clases para parsear la informacion de los logs a objetos
 class ParserGame(object):
     match_id = ""
     server_game_name = ""
@@ -74,6 +75,25 @@ class ParserPlayerGame(object):
         damage = 0
         firstblood = 0
         firstblood_die = 0
+
+
+# -----Metodos para el parseo Generales
+def get_initial_parse_data(data):
+    for k, line in enumerate(data):
+        if "GAME_START" in line:
+            return k
+
+
+def select_parser(data):
+    for line in data[:6]:
+        if "INFO_GAME" in line and "HoN Russian" in line and "1.0.45b" in line:
+            return 0, "HoN Russian version:1.0.45b"
+        if "INFO_GAME" in line and "Heroes of Newerth" in line and "3.2.1.2" in line:
+            return 1, "Heroes of Newerth version:3.2.1.2"
+    return -1, "Parser no encontrado"
+
+
+# -----Metodos para el parseo de los log del HoN Ruso
 
 
 def parse_info_game_russian(line, storage):

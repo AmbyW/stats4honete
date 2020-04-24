@@ -18,6 +18,7 @@ class ParserGame(object):
     match_time = ""
     team_win = ""
     win_time = 0
+    has_first = False
     playersgame_set = []
     delete_it = False
     delete_reazon = ""
@@ -188,36 +189,36 @@ def parse_kill_russian(line, storage):
 
 
 def parse_first_russian(line, storage):
-    line_list = line.split(":")
-    player_pos = ''
-    player_die_pos = ''
-    hero_slug = ''
-    player_team = ''
-    first_time = ''
-    founded_killer = founded_dead = False
-    for u in range(len(line_list)):
-        if 'time' in line_list[u]:
-            first_time = line_list[u+1].split(' ')[0]
-        if 'player' in line_list[u]:
-            player_pos = line_list[u+1].split(' ')[0]
-        if 'owner' in line_list[u]:
-            player_die_pos = line_list[u+1].replace('\n', '').split(' ')[0]
-        if 'name' in line_list[u]:
-            hero_slug = line_list[u+1].replace('"', '').split(' ')[0]
-        if 'team' in line_list[u]:
-            player_team = line_list[u+1].split(' ')[0]
-    if player_pos != '':
-        for player in storage.playersgame_set:
-            if player.player_pos == player_pos:
-                player.firstblood = first_time
-                player.hero = hero_slug
-                player.team = player_team
-                founded_killer = True
-            if player.player_pos == player_die_pos:
-                player.firstblood_die = first_time
-                founded_dead = True
-            if founded_killer and founded_dead:
-                break
+    if not storage.has_first:
+        line_list = line.split(":")
+        player_pos = ''
+        player_die_pos = ''
+        hero_slug = ''
+        player_team = ''
+        first_time = ''
+        for u in range(len(line_list)):
+            if 'time' in line_list[u]:
+                first_time = line_list[u+1].split(' ')[0]
+            if 'player' in line_list[u]:
+                player_pos = line_list[u+1].split(' ')[0]
+            if 'owner' in line_list[u]:
+                player_die_pos = line_list[u+1].replace('\n', '').split(' ')[0]
+            if 'name' in line_list[u]:
+                hero_slug = line_list[u+1].replace('"', '').split(' ')[0]
+            if 'team' in line_list[u]:
+                player_team = line_list[u+1].split(' ')[0]
+        if player_pos != '':
+            for player in storage.playersgame_set:
+                if player.player_pos == player_pos:
+                    player.firstblood = first_time
+                    player.hero = hero_slug
+                    player.team = player_team
+                else:
+                    player.firstblood = 0
+                if player.player_pos == player_die_pos:
+                    player.firstblood_die = first_time
+                else:
+                    player.firstblood_die = 0
 
 
 def parse_gold_plus_russian(line, storage):

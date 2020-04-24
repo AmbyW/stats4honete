@@ -76,30 +76,30 @@ class ParserPlayerGame(object):
         firstblood_die = 0
 
 
-def parse_info_game(line, storage):
+def parse_info_game_russian(line, storage):
     line_list = line.split("\"")
     storage.game_name = line_list[1]
     storage.game_version = line_list[3]
 
 
-def parse_info_match(line, storage):
+def parse_info_match_russian(line, storage):
     line_list = line.split("\"")
     storage.match_name = line_list[1]
     storage.match_id = line_list[3]
 
 
-def parse_info_map(line, storage):
+def parse_info_map_russian(line, storage):
     line_list = line.split("\"")
     storage.map_name = line_list[1]
     storage.map_version = line_list[3]
 
 
-def parse_info_server(line, storage):
+def parse_info_server_russian(line, storage):
     line_list = line.split("\"")
     storage.server_game_name = line_list[1]
 
 
-def parse_player_conn(line, storage):
+def parse_player_conn_russian(line, storage):
     line_list1 = line.split("\"")
     line_list2 = line.split(":")
     player_pos = ''
@@ -122,24 +122,17 @@ def parse_player_conn(line, storage):
         storage.playersgame_set.append(player)
 
 
-def parse_teamchange(line, storage):
+def parse_teamchange_russian(line, storage):
     line_list1 = line.split(":")
     team = line_list1[-1].replace('\n', '')
     player_pos = line_list1[1].split(' ')[0]
-    player_exists = False
     for player in storage.playersgame_set:
         if player.player_pos == player_pos:
             player.team = team
-            player_exists = True
             break
-    if not player_exists:
-        player = ParserPlayerGame()
-        player.player_pos = player_pos
-        player.team = team
-        storage.playersgame_set.append(player)
 
 
-def parse_kill(line, storage):
+def parse_kill_russian(line, storage):
     who_kill = ''
     hero_kill = ''
     hero_die = ''
@@ -147,7 +140,6 @@ def parse_kill(line, storage):
     killer_team = ''
     who_assist = []
     line_list1 = line.split(":")
-    founded_killer = founded_dead = False
     for u in range(len(line_list1)):
         if 'player' in line_list1[u]:
             who_kill = line_list1[u+1].split(' ')[0]
@@ -167,30 +159,15 @@ def parse_kill(line, storage):
                 player.kills += 1
                 player.hero = hero_kill
                 player.team = killer_team
-            founded_killer = True
         if player.player_pos == who_die:
             if hero_die.startswith('Hero_'):
                 player.dead += 1
                 player.hero = hero_die
-                founded_dead = True
         if player.player_pos in who_assist:
             player.assitances += 1
-    if not founded_killer and who_kill != '' and hero_kill.startswith('Hero_'):
-        player_kill = ParserPlayerGame()
-        player_kill.player_pos = who_kill
-        player_kill.kills += 1
-        player_kill.team = killer_team
-        player_kill.hero = hero_kill
-        storage.playersgame_set.append(player_kill)
-    if not founded_dead and who_die != '' and hero_die.startswith('Hero_'):
-        player_dead = ParserPlayerGame()
-        player_dead.player_pos = who_die
-        player_dead.dead += 1
-        player_dead.hero = hero_die
-        storage.playersgame_set.append(player_dead)
 
 
-def parse_first(line, storage):
+def parse_first_russian(line, storage):
     line_list = line.split(":")
     player_pos = ''
     player_die_pos = ''
@@ -214,31 +191,20 @@ def parse_first(line, storage):
             if player.player_pos == player_pos:
                 player.firstblood = first_time
                 player.hero = hero_slug
+                player.team = player_team
                 founded_killer = True
             if player.player_pos == player_die_pos:
                 player.firstblood_die = first_time
                 founded_dead = True
             if founded_killer and founded_dead:
                 break
-        if not founded_killer and player_pos != '':
-            player_kill = ParserPlayerGame()
-            player_kill.team = player_team
-            player_kill.player_pos = player_pos
-            player_kill.hero = hero_slug
-            storage.playersgame_set.append(player_kill)
-        if not founded_dead and player_die_pos != '':
-            player_die = ParserPlayerGame()
-            player_die.player_pos = player_die_pos
-            player_die.firstblood_die = first_time
-            storage.playersgame_set.append(player_die)
 
 
-def parse_gold_plus(line, storage):
+def parse_gold_plus_russian(line, storage):
     line_list = line.split(":")
     player_pos = ''
     gold = ''
     team = ''
-    player_founded = False
     for u in range(len(line_list)):
         if 'player' in line_list[u]:
             player_pos = line_list[u+1].split(' ')[0]
@@ -251,22 +217,14 @@ def parse_gold_plus(line, storage):
             if player.player_pos == player_pos:
                 player.golds += int(gold)
                 player.team = team
-                player_founded = True
                 break
-        if not player_founded:
-            player = ParserPlayerGame()
-            player.player_pos = player_pos
-            player.golds += int(gold)
-            player.team = team
-            storage.playersgame_set.append(player)
 
 
-def parse_gold_less(line, storage):
+def parse_gold_less_russian(line, storage):
     line_list = line.split(":")
     player_pos = ''
     gold = ''
     team = ''
-    player_founded = False
     for u in range(len(line_list)):
         if 'player' in line_list[u]:
             player_pos = line_list[u+1].split(' ')[0]
@@ -279,23 +237,15 @@ def parse_gold_less(line, storage):
             if player.player_pos == player_pos:
                 player.golds -= int(gold)
                 player.team = team
-                player_founded = True
                 break
-        if not player_founded:
-            player = ParserPlayerGame()
-            player.player_pos = player_pos
-            player.golds -= int(gold)
-            player.team = team
-            storage.playersgame_set.append(player)
 
 
-def parse_damage(line, storage):
+def parse_damage_russian(line, storage):
     line_list = line.split(":")
     player_pos = ''
     damage = ''
     hero = ''
     team = ''
-    player_founded = False
     for u in range(len(line_list)):
         if 'player' in line_list[u]:
             player_pos = line_list[u+1].split(' ')[0]
@@ -311,23 +261,14 @@ def parse_damage(line, storage):
                 player.hero = hero
                 player.team = team
                 player.damage += float(damage)
-                player_founded = True
                 break
-        if not player_founded:
-            player = ParserPlayerGame()
-            player.player_pos = player_pos
-            player.hero = hero
-            player.team = team
-            player.damage += float(damage)
-            storage.playersgame_set.append(player)
 
 
-def parse_exp(line, storage):
+def parse_exp_russian(line, storage):
     line_list = line.split(":")
     player_pos = ''
     team = ''
     exp = ''
-    player_founded = False
     for u in range(len(line_list)):
         if 'player' in line_list[u]:
             player_pos = line_list[u+1].split(' ')[0]
@@ -340,17 +281,10 @@ def parse_exp(line, storage):
             if player.player_pos == player_pos:
                 player.experiens += float(exp)
                 player.team = team
-                player_founded = True
                 break
-        if not player_founded:
-            player = ParserPlayerGame()
-            player.team = team
-            player.experiens += float(exp)
-            player.player_pos = player_pos
-            storage.playersgame_set.append(player)
 
 
-def parse_datetime(line, storage):
+def parse_datetime_russian(line, storage):
     line_list = line.split("\"")
     date = line_list[1].replace("/", "-")
     time = line_list[3]
@@ -358,7 +292,7 @@ def parse_datetime(line, storage):
     storage.match_time = time
 
 
-def parse_end(line, storage):
+def parse_end_russian(line, storage):
     print("parsing end line")
     line_list = line.split(":")
     duration = ""
@@ -376,13 +310,13 @@ def parse_end(line, storage):
         storage.finished = True
 
 
-def parse_start(last_lines, storage):
+def parse_start_russian(last_lines, storage):
     for line in last_lines:
         if "GAME_END" in line:
-            parse_end(line, storage)
+            parse_end_russian(line, storage)
 
 
-def parse_data(data, storage, start=None, end=None):
+def parse_data_russian(data, storage, start=None, end=None):
     """
         :param data list()
         :param start integer
@@ -401,32 +335,32 @@ def parse_data(data, storage, start=None, end=None):
     start_time = time.time()
     for line in data[start:end]:
         if 'INFO_DATE' in line:
-            parse_datetime(line, storage)
+            parse_datetime_russian(line, storage)
         if 'INFO_GAME' in line:
-            parse_info_game(line, storage)
+            parse_info_game_russian(line, storage)
         if 'INFO_MATCH' in line:
-            parse_info_match(line, storage)
+            parse_info_match_russian(line, storage)
         if 'INFO_MAP' in line:
-            parse_info_map(line, storage)
+            parse_info_map_russian(line, storage)
         if 'INFO_SERVER' in line:
-            parse_info_server(line, storage)
+            parse_info_server_russian(line, storage)
         if str(line).startswith('GAME_START'):
-            parse_start(data[-4:], storage)
+            parse_start_russian(data[-4:], storage)
         if str(line).startswith('PLAYER_CONNECT'):
-            parse_player_conn(line, storage)
+            parse_player_conn_russian(line, storage)
         if str(line).startswith('PLAYER_TEAM_CHANGE'):
-            parse_teamchange(line, storage)
+            parse_teamchange_russian(line, storage)
         if str(line).startswith('KILL'):
-            parse_kill(line, storage)
+            parse_kill_russian(line, storage)
         if str(line).startswith('AWARD_FIRST_BLOOD'):
-            parse_first(line, storage)
+            parse_first_russian(line, storage)
         if str(line).startswith('EXP_EARNED'):
-            parse_exp(line, storage)
+            parse_exp_russian(line, storage)
         if str(line).startswith('GOLD_EARNED'):
-            parse_gold_plus(line, storage)
+            parse_gold_plus_russian(line, storage)
         if str(line).startswith('GOLD_LOST'):
-            parse_gold_less(line, storage)
+            parse_gold_less_russian(line, storage)
         if str(line).startswith('DAMAGE'):
-            parse_damage(line, storage)
+            parse_damage_russian(line, storage)
     end_time = time.time()
     print("Elapsed time=", end_time - start_time)

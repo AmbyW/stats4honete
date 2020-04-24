@@ -195,7 +195,7 @@ class Game(models.Model):
                                                     'end': int(stop_in)}))
             start_in += step
             stop_in += step
-            print(stop_in, "lineas" )
+            print(stop_in, "lineas")
         [thread.start() for thread in threads]
         [thread.join() for thread in threads]
         end_time = time.time()

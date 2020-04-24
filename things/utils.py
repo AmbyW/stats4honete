@@ -83,6 +83,7 @@ def get_initial_parse_data(data):
     for k, line in enumerate(data):
         if "GAME_START" in line:
             return k
+    return -1
 
 
 def select_parser(data):
@@ -92,6 +93,13 @@ def select_parser(data):
         if "INFO_GAME" in line and "Heroes of Newerth" in line and "3.2.1.2" in line:
             return 1, "Heroes of Newerth version:3.2.1.2"
     return -1, "Parser no encontrado"
+
+
+def verify_end(data):
+    for line in data[:-5]:
+        if "GAME_END" in line:
+            return True
+    return False
 
 
 # -----Metodos para el parseo de los log del HoN Ruso

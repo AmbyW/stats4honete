@@ -5,7 +5,7 @@ from django.db.models import Q, F
 from django.core.exceptions import ValidationError, MultipleObjectsReturned
 import uuid
 from statshon import settings
-from things.utils import ParserGame, parse_data_russian, get_initial_parse_data, select_parser
+from things.utils import ParserGame, parse_data_russian, get_initial_parse_data, select_parser, verify_end
 import datetime
 import time
 import threading
@@ -183,12 +183,16 @@ class Game(models.Model):
 
         start_time = time.time()
         start_in = get_initial_parse_data(data)
+        if start_in == -1:
+            return 'El juego no comenzó o el archivo log esta incompleto'
         step = len(data) // NUM_WORKERS
         stop_in = start_in + step
 
+        # if not verify_end(data):
+        #     return 'El log de juego no esta completo o el juego no se termino'
         threads = []
         game_data = ParserGame()
-        parser, text = select_parser(data[:8])
+        parser, text = select_parser(data[:8]) or 0
         if parser == 0:
             parse_data_russian(data[:start_in+1], game_data)
             for _ in range(NUM_WORKERS):
@@ -207,27 +211,38 @@ class Game(models.Model):
             pass
         else:
             game_data.delete()
-        if self.verify_parse(game_data):
+        verifeid = self.verify_parse(game_data)
+        if verifeid == 0:
             self.save_parse(game_data)
             game_data.delete()
-        else:
+            return 'OK'
+        elif verifeid == 1:
             game_data.delete()
-            self.delete()
+            # self.delete()
+            return 'El log no será salvado porque el juego es de menos de 6 jugadores'
+        elif verifeid == 2:
+            game_data.delete()
+            # self.delete()
+            return 'El log no será salvado porque ya existe este juego salvado en la base de datos'
+        else:
+            return 'Error no reconocido'
 
     def verify_parse(self, data):
         print('Time to verify', len(data.playersgame_set))
         if len(data.playersgame_set) < 6:
             self.delete()
-            print('El juego tiene menos de 6 juagdores')
-            raise ValidationError(message=_('El log no será salvado porque el juego es de menos de 6 jugadores'))
+            return 1
+            # print('El juego tiene menos de 6 juagdores')
+            # raise ValidationError(message=_('El log no será salvado porque el juego es de menos de 6 jugadores'))
         print('date:', data.match_date, ' time:', data.match_time, ' id:', data.match_id)
         list_date = data.match_date.split('-')
         parsed_date = list_date[0]+'-'+list_date[-1]+'-'+list_date[1]
         if Game.objects.filter(match_date=parsed_date, match_time=data.match_time, match_id=data.match_id).exists():
             self.delete()
-            print('Ya existe otro juego con esas mismas caracteristicas')
-            raise ValidationError(message=_('El log no será salvado porque ya existe este juego salvado en la base de datos'))
-        return True
+            return 2
+            # print('Ya existe otro juego con esas mismas caracteristicas')
+            # raise ValidationError(message=_('El log no será salvado porque ya existe este juego salvado en la base de datos'))
+        return 0
 
     def save_parse(self, data):
         print('save parsing')
@@ -275,11 +290,10 @@ class Game(models.Model):
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         super(Game, self).save()
-        self.parse_c_log_data()
-        if not self.check_parse():
-            self.delete()
-            raise ValidationError('El archivo log no pudo ser analizado, revise si subió el archivo correcto.')
-        return super(Game, self).save()
+        message = self.parse_c_log_data()
+        if message != 'OK':
+            raise ValidationError(message)
+        return super(Game, self).save(), message
 
 
 class PlayersGame(models.Model):

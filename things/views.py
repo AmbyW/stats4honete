@@ -3,6 +3,7 @@ from django.db.models import Q, F, Sum, Count, Case, When, Avg
 from django.urls import reverse_lazy
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
+from django.contrib import messages
 from .models import *
 from .forms import *
 
@@ -55,12 +56,22 @@ def games_list(request):
 
 def game_add(request):
     error = ''
+    mess = 'El log no se ha salvado: puede ser por una de las siguientes razones\n' + \
+           '1. El Log era de un juego en el que perticipaban menos de 6 juegadores.\n' + \
+           '2. Ya Hay un log con iguales caracteristicas o este mismo log ya se guardó.\n' + \
+           '3. El log está incompleto o el juego no fue termindao.\n'
     if request.method == 'POST':
         form = GameForm(request.POST, request.FILES)
         if form.is_valid():
             try:
                 game = form.save()
-                return redirect(reverse_lazy('games_sta', kwargs={'id_game': game.id}))
+                print(game, 'games_sta')
+                if game.id:
+                    return redirect(reverse_lazy('games_sta', kwargs={'id_game': game.id}))
+                else:
+
+                    messages.error(request, mess)
+                    return redirect(reverse_lazy('games_list'))
             except ValidationError as e:
                 error = str(e)
                 return render(request, 'honete/form_games.html', {'form': form, 'errors': error})

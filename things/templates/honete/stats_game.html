@@ -33,8 +33,8 @@
                         {% endif %}
                     </td>
                     <td class="text-center">{{player.kills}}/{{player.dead}}/{{player.assitances}}</td>
-                    <td class="text-center">{% if player.firstblood > 0 %}{{player.firstblood|int_time}} {% else %}-{% endif %}</td>
-                    <td class="text-center">{% if player.firstblood_die > 0 %}{{player.firstblood_die|int_time}}{% else %}-{% endif %}</td>
+                    <td class="text-center">{% if player.firstblood > -1 %}{{player.firstblood|int_time}} {% else %}-{% endif %}</td>
+                    <td class="text-center">{% if player.firstblood_die > -1 %}{{player.firstblood_die|int_time}}{% else %}-{% endif %}</td>
                     <td class="text-center">{{player.damage|floatformat:"2"}}</td>
                     <td class="text-center">{{player.golds|floatformat:"2"}}</td>
                     <td class="text-center">{{player.experiens|floatformat:"2"}}</td>
@@ -74,8 +74,8 @@
                         No identificado
                         {% endif %}</td>
                     <td class="text-center">{{player.kills}}/{{player.dead}}/{{player.assitances}}</td>
-                    <td class="text-center">{% if player.firstblood > 0 %}{{player.firstblood|int_time}} {% else %}-{% endif %}</td>
-                    <td class="text-center">{% if player.firstblood_die > 0 %}{{player.firstblood_die|int_time}}{% else %}-{% endif %}</td>
+                    <td class="text-center">{% if player.firstblood > -1 %}{{player.firstblood|int_time}} {% else %}-{% endif %}</td>
+                    <td class="text-center">{% if player.firstblood_die > -1 %}{{player.firstblood_die|int_time}}{% else %}-{% endif %}</td>
                     <td class="text-center">{{player.damage|floatformat:"2"}}</td>
                     <td class="text-center">{{player.golds|floatformat:"2"}}</td>
                     <td class="text-center">{{player.experiens|floatformat:"2"}}</td>

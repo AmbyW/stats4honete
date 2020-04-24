@@ -224,11 +224,11 @@ def parse_first_russian(line, storage):
                     player.hero = hero_slug
                     player.team = player_team
                 else:
-                    player.firstblood = 0
+                    player.firstblood = -1
                 if player.player_pos == player_die_pos:
                     player.firstblood_die = first_time
                 else:
-                    player.firstblood_die = 0
+                    player.firstblood_die = -1
 
 
 def parse_gold_plus_russian(line, storage):

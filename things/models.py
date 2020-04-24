@@ -295,8 +295,8 @@ class PlayersGame(models.Model):
     golds = models.DecimalField(max_digits=21, decimal_places=10, blank=True, null=True, default=0)
     assitances = models.PositiveIntegerField(blank=True, null=True, default=0)
     damage = models.DecimalField(max_digits=21, decimal_places=10, blank=True, null=True, default=0)
-    firstblood = models.PositiveIntegerField(blank=True, null=True, default=0)
-    firstblood_die = models.PositiveIntegerField(blank=True, null=True, default=0)
+    firstblood = models.IntegerField(blank=True, null=True, default=-1)
+    firstblood_die = models.IntegerField(blank=True, null=True, default=-1)
 
     def __str__(self):
         return '{}'.format(self.player)

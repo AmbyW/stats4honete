@@ -221,8 +221,9 @@ class Game(models.Model):
             print('El juego tiene menos de 6 juagdores')
             raise ValidationError(message=_('El log no será salvado porque el juego es de menos de 6 jugadores'))
         print('date:', data.match_date, ' time:', data.match_time, ' id:', data.match_id)
-        date_parsed = data.match_date.split('-')
-        if Game.objects.filter(match_date=data.match_date, match_time=data.match_time, match_id=data.match_id).exists():
+        list_date = data.match_date.split('-')
+        parsed_date = list_date[0]+'-'+list_date[-1]+'-'+list_date[1]
+        if Game.objects.filter(match_date=parsed_date, match_time=data.match_time, match_id=data.match_id).exists():
             self.delete()
             print('Ya existe otro juego con esas mismas caracteristicas')
             raise ValidationError(message=_('El log no será salvado porque ya existe este juego salvado en la base de datos'))
@@ -259,8 +260,8 @@ class Game(models.Model):
             playergame.dead = player_on_game.dead
             playergame.assitances = player_on_game.assitances
             playergame.golds = player_on_game.golds
-            # playergame.experiens = player_on_game.experiens
-            # playergame.damage = player_on_game.damage
+            playergame.experiens = player_on_game.experiens
+            playergame.damage = player_on_game.damage
             playergame.firstblood = player_on_game.firstblood
             playergame.firstblood_die = player_on_game.firstblood_die
             playergame.ip_address = player_on_game.ip_address

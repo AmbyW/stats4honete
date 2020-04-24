@@ -30,6 +30,6 @@ def int_time(value):
         sec = total_sec % 60
         hour = total_min // 60
         min = total_min % 60
-        return "{}:{}:{}.{}".format(hour, min, sec, milisec)
+        return "{}:{}:{}.{}".format(hour, str(min).zfill(2), str(sec).zfill(2), str(milisec).zfill(3))
     except ValueError as e:
         return value

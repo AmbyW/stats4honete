@@ -202,17 +202,27 @@ class Game(models.Model):
         print("Threads time=", end_time - start_time)
         if self.verify_parse(game_data):
             self.save_parse(game_data)
+            game_data.delete()
+        else:
+            game_data.delete()
+            self.delete()
 
     def verify_parse(self, data):
+        print('Time to verify', len(data.playersgame_set))
         if len(data.playersgame_set) < 6:
             self.delete()
+            print('El juego tiene menos de 6 juagdores')
             raise ValidationError(message=_('El log no será salvado porque el juego es de menos de 6 jugadores'))
+        print('date:', data.match_date, ' time:', data.match_time, ' id:', data.match_id)
+        date_parsed = data.match_date.split('-')
         if Game.objects.filter(match_date=data.match_date, match_time=data.match_time, match_id=data.match_id).exists():
             self.delete()
+            print('Ya existe otro juego con esas mismas caracteristicas')
             raise ValidationError(message=_('El log no será salvado porque ya existe este juego salvado en la base de datos'))
         return True
 
     def save_parse(self, data):
+        print('save parsing')
         self.game_name = data.game_name
         self.game_version = data.game_version
         self.map_name = data.map_name
@@ -242,8 +252,8 @@ class Game(models.Model):
             playergame.dead = player_on_game.dead
             playergame.assitances = player_on_game.assitances
             playergame.golds = player_on_game.golds
-            playergame.experiens = player_on_game.experiens
-            playergame.damage = player_on_game.damage
+            # playergame.experiens = player_on_game.experiens
+            # playergame.damage = player_on_game.damage
             playergame.firstblood = player_on_game.firstblood
             playergame.firstblood_die = player_on_game.firstblood_die
             playergame.ip_address = player_on_game.ip_address

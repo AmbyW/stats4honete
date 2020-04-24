@@ -22,6 +22,28 @@ class ParserGame(object):
     delete_reazon = ""
     finished = False
 
+    def __init__(self):
+        match_id = ""
+        server_game_name = ""
+        game_name = ""
+        game_version = ""
+        match_name = ""
+        map_name = ""
+        map_version = ""
+        match_date = ""
+        match_time = ""
+        team_win = ""
+        win_time = 0
+        playersgame_set = list()
+        delete_it = False
+        delete_reazon = ""
+        finished = False
+
+    def delete(self):
+        for pg in self.playersgame_set:
+            del pg
+        del self
+
 
 class ParserPlayerGame(object):
     ip_address = ""
@@ -37,6 +59,21 @@ class ParserPlayerGame(object):
     damage = 0
     firstblood = 0
     firstblood_die = 0
+
+    def __init__(self):
+        ip_address = ""
+        hero = ""
+        player = ""
+        player_pos = ""
+        team = ""
+        kills = 0
+        dead = 0
+        experiens = 0
+        golds = 0
+        assitances = 0
+        damage = 0
+        firstblood = 0
+        firstblood_die = 0
 
 
 def parse_info_game(line, storage):

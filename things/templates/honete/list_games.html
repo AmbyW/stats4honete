@@ -1,5 +1,5 @@
 {% extends 'honete/homehon.html' %}
-{% load static %}
+{% load static things_tags %}
     {% block content_left %}
 <div>
     <table class="stats_table">
@@ -19,13 +19,13 @@
         {% for game in games %}
         <tr>
             <td><a href="{% url 'games_sta' game.id %}">{{game.match_date}} {{game.match_time}}</a></td>
-            <td>{{game.win_time}}</td>
+            <td>{{game.win_time|int_time}}</td>
             <td>{{game.game_name}}</td>
             <td>{{game.game_version}}</td>
             <td>{{game.map_name}}</td>
             <td>{{game.server_game_name}}</td>
             <td><a href="/media/{{game.log_file}}" target="_blank">{{game.match_name}}</a></td>
-            <td>{% if game.team_win == 1 %}Hellbourne{% else %} Legion {% endif %}</td>
+            <td>{% if game.team_win == "1" %}Hellbourne{% else %} Legion {% endif %}</td>
         </tr>
         {% empty %}
         <tr><h3>No hay ningun juego subido</h3></tr>

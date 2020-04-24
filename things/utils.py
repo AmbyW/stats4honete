@@ -42,8 +42,8 @@ class ParserGame(object):
         finished = False
 
     def delete(self):
-        for pg in self.playersgame_set:
-            del pg
+        for k in range(len(self.playersgame_set)):
+            self.playersgame_set.pop()
         del self
 
 
@@ -134,12 +134,22 @@ def parse_player_conn_russian(line, storage):
             exist_player_conn = True
             player_game.player = line_list1[1]
             player_game.ip_address = line_list1[3]
+            player_game.kills = 0
+            player_game.dead = 0
+            player_game.assitances = 0
+            player_game.golds = 0
+            player_game.damage = 0
             break
     if not exist_player_conn:
         player = ParserPlayerGame()
         player.player = line_list1[1]
         player.player_pos = player_pos
         player.ip_address = line_list1[3]
+        player.kills = 0
+        player.dead = 0
+        player.assitances = 0
+        player.golds = 0
+        player.damage = 0
         storage.playersgame_set.append(player)
 
 
@@ -332,6 +342,7 @@ def parse_end_russian(line, storage):
 
 
 def parse_start_russian(last_lines, storage):
+    storage.team_win = ""
     for line in last_lines:
         if "GAME_END" in line:
             parse_end_russian(line, storage)

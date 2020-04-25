@@ -9,7 +9,7 @@
             <thead class="headerTitle title gDark">
                 <tr>
                     <th>Jugador</th>
-                    <th>Dir IP</th>
+                    {% if "HoN Russian" in game.game_name %}<th>Dir IP</th>{% endif %}
                     <th>Heroe</th>
                     <th>K/D/A</th>
                     <th>FirstBlood Kill</th>
@@ -24,7 +24,7 @@
             {% if player.team.code == "1" %}
                 <tr>
                     <td>{{player.player}}</td>
-                    <td>{{player.ip_address}}</td>
+                    {% if "HoN Russian" in game.game_name %}<td>{{player.ip_address}}</td>{% endif %}
                     <td>
                         {% if player.hero %}
                         <a href="{% url 'heros_view' player.hero.id }}">{{player.hero}}</a>
@@ -51,7 +51,7 @@
             <thead class="headerTitle title gDark">
                 <tr>
                     <th>Jugador</th>
-                    <th>Dir IP</th>
+                    {% if "HoN Russian" in game.game_name %}<th>Dir IP</th>{% endif %}
                     <th>Héroe</th>
                     <th>K/D/A</th>
                     <th>FirstBlood Kill</th>
@@ -66,7 +66,7 @@
             {% if player.team.code == "2" %}
                 <tr>
                     <td>{{player.player}}</td>
-                    <td>{{player.ip_address}}</td>
+                    {% if "HoN Russian" in game.game_name %}<td>{{player.ip_address}}</td>{% endif %}
                     <td>
                         {% if player.hero %}
                         <a href="{% url 'heros_view' player.hero.id }}">{{player.hero}}</a>

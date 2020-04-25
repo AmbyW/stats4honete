@@ -276,6 +276,7 @@ class Game(models.Model):
         self.server_game_name = data.server_game_name
         for player_on_game in data.playersgame_set:
             player, created = Player.objects.get_or_create(name=player_on_game.player)
+
             team, created = TypeTeam.objects.get_or_create(code=player_on_game.team)
             hero = Hero.objects.filter(slug=player_on_game.hero).first()
             playergame = PlayersGame()

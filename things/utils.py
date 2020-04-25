@@ -367,6 +367,19 @@ def parse_start_hon(last_lines, storage):
             parse_end_russian(line, storage)
 
 
+def parse_player_term_hon(line, storage):
+    line_list = line.split(":")
+    player_pos = ""
+    for u in range(len(line_list)):
+        if "player" in line_list[u]:
+            player_pos = line_list[u+1].replace('\n', '')
+    if player_pos != "":
+        for k, player in enumerate(storage.playersgame_set):
+            if player.player_pos == player_pos:
+                del player
+                storage.playersgame_set.pop(k)
+
+
 def parse_data_hon(data, storage, start=None, end=None):
     """
         :param data list()
@@ -395,6 +408,8 @@ def parse_data_hon(data, storage, start=None, end=None):
             parse_info_map_hon(line, storage)
         if 'INFO_SERVER' in line:
             parse_info_server_hon(line, storage)
+        if 'PLAYER_TERMINATED' in line:
+            parse_player_term_hon(line, storage)
         if str(line).startswith('GAME_START'):
             parse_start_hon(data[-4:], storage)
         if str(line).startswith('PLAYER_CONNECT'):

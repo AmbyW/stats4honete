@@ -5,7 +5,8 @@ from django.db.models import Q, F
 from django.core.exceptions import ValidationError, MultipleObjectsReturned
 import uuid
 from statshon import settings
-from things.utils import ParserGame, parse_data_russian, get_initial_parse_data, select_parser, verify_end
+from things.utils import ParserGame, parse_data_russian, get_initial_parse_data, select_parser, verify_end, \
+    parse_data_hon
 import datetime
 import time
 import threading
@@ -208,7 +209,19 @@ class Game(models.Model):
             end_time = time.time()
             print("Threads time=", end_time - start_time)
         elif parser == 1:
-            pass
+            parse_data_hon(data[:start_in+1], game_data)
+            for _ in range(NUM_WORKERS):
+                threads.append(threading.Thread(target=parse_data_hon,
+                                                args=(data, game_data, ),
+                                                kwargs={'start': int(start_in),
+                                                        'end': int(stop_in)}))
+                start_in += step
+                stop_in += step
+                print(stop_in, "lineas")
+            [thread.start() for thread in threads]
+            [thread.join() for thread in threads]
+            end_time = time.time()
+            print("Threads time=", end_time - start_time)
         else:
             game_data.delete()
         verifeid = self.verify_parse(game_data)

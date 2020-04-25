@@ -1,0 +1,12 @@
+.first-row {
+    color: darkgreen;
+    background-color: darkseagreen;
+}
+.last-row {
+    color: indigo;
+    background-color: mediumslateblue;
+}
+.inred-row {
+    color: red;
+    background-color: lightcoral;
+}

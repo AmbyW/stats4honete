@@ -1,0 +1,29 @@
+/* DEFAULT LANDING REQUIREMENTS */
+	#featured {
+		border-radius: 6px;
+		min-height: 120px;
+		width: 100%;
+	}
+	
+	.header {
+		border-radius: 6px;
+		margin: 20px 15px 0;
+		min-height: 125px;
+		width: 334px;
+	}
+	
+	.header:hover {
+		text-decoration: none !important;
+	}
+	
+	.header .title {
+		border-radius: 6px 6px 0 0;
+		padding: 3px 3px 3px 13px;
+		width: 318px;
+	}
+	
+	#featured .title {
+		border-radius: 6px 6px 0 0;
+		padding: 5px 0 5px 13px;
+		width: 1087px;
+	}

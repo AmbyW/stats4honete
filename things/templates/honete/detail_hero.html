@@ -1,0 +1,28 @@
+{% extends 'honete/homehon.html' %}
+{% load static %}
+{% block content_full %}
+<div class="main" style="background-image: url( '/media/{{hero.background}}' );">
+    <div>
+        <table>
+            <thead>
+            <tr>
+                <th>Jugador</th>
+                <th>Kills</th>
+                <th>Muertes</th>
+                <th>Asistencias</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for player in players|dictsortreversed:"total_kill" %}
+                <tr>
+                    <td>{{player.name}}</td>
+                    <td>{{player.total_kill}}</td>
+                    <td>{{player.total_die}}</td>
+                    <td>{{player.total_assist}}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock content_full %}

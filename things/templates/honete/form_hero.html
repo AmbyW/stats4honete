@@ -1,0 +1,24 @@
+{% extends 'honete/homehon.html' %}
+{% block body_class %}no-home{% endblock body_class %}
+{% block content_left %}
+
+<div class="hero-form">
+    <form method="POST" enctype="multipart/form-data" action="{% url 'heros_add' %}"> {% csrf_token %}
+    {% for field in form %}
+        <div>
+            <span class="headerTitle title">{{ field.label }}</span>
+            {{ field }}
+            {% if field.errors %}
+            <span class="error_text">{{ field.errors }}</span>
+            {% endif %}
+        </div>
+
+    {% endfor %}
+        <br/>
+        <div class="row">
+            <button type="submit" class="redbtn right">Agregar</button>
+        </div>
+    </form>
+</div>
+
+{% endblock content_left %}

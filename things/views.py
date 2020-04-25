@@ -109,9 +109,9 @@ def stats(request):
                                             golds=Sum('golds'),
                                             assists=Sum('assitances'),
                                             damage=Sum('damage'),
-                                            first_kills=Sum(Case(When(firstblood=0, then=0), default=1,
+                                            first_kills=Sum(Case(When(firstblood=-1, then=0), default=1,
                                                                  output_field=models.IntegerField())),
-                                            first_dies=Sum(Case(When(firstblood_die=0, then=0), default=1,
+                                            first_dies=Sum(Case(When(firstblood_die=-1, then=0), default=1,
                                                                 output_field=models.IntegerField())),
                                             wins=Count(Case(When(game__team_win=F('team'), then=1))),
                                             )
@@ -141,9 +141,9 @@ def stats_tmp(request):
                                             golds=Sum('golds'),
                                             assists=Sum('assitances'),
                                             damage=Sum('damage'),
-                                            first_kills=Sum(Case(When(firstblood=0, then=0), default=1,
+                                            first_kills=Sum(Case(When(firstblood=-1, then=0), default=1,
                                                                  output_field=models.IntegerField())),
-                                            first_dies=Sum(Case(When(firstblood_die=0, then=0), default=1,
+                                            first_dies=Sum(Case(When(firstblood_die=-1, then=0), default=1,
                                                                 output_field=models.IntegerField())),
                                             wins=Count(Case(When(game__team_win=F('team'), then=1))),
                                             )

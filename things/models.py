@@ -1,11 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.utils.translation import ugettext_lazy as _
-from django.db.models import Q, F
-from django.core.exceptions import ValidationError, MultipleObjectsReturned
+from django.utils.translation import gettext_lazy as _
+from django.core.exceptions import ValidationError
 import uuid
 from statshon import settings
-from things.utils import ParserGame, parse_data_russian, get_initial_parse_data, select_parser, verify_end, \
+from things.utils import ParserGame, parse_data_russian, get_initial_parse_data, select_parser, \
     parse_data_hon
 import datetime
 import time

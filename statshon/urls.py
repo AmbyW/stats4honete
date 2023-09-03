@@ -13,14 +13,15 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-#from django.contrib import admin
-from django.urls import path, include
-from things import urls as honete_urls
+from django.urls import path, include, reverse_lazy
+from django.views.generic import RedirectView
 from statshon import settings
 from django.conf.urls.static import static
 
 
 urlpatterns = static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + [
-#    path('admin/', admin.site.urls),
-    path('', include(honete_urls))
+    path('', RedirectView.as_view(url=reverse_lazy('home'))),
+    path('hon/', include('things.urls')),
+    path('auth/', include('honauth.urls'))
+
 ]

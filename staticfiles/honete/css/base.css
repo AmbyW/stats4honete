@@ -475,7 +475,6 @@ input, select {
 }
 
 #errorBar {
-	display: none;
 	background-color: #C81818;
 	position: fixed;
 	width: 100%;
@@ -485,6 +484,9 @@ input, select {
 	padding: 3px 0;
 	top:37px;
 	cursor: pointer;
+}
+#errorBar.no-show {
+	display: none;
 }
 
 #errorBar > p {

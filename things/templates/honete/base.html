@@ -36,19 +36,44 @@
 		<div id="loginBar" class="gDark">
 			<div class="centerIt">
 				<!-- Login -->
+				<div class="left">
+                    {% if messages %}
+                        {% for message in messages %}
+                    <h3 class="msg">{{ message|truncatechars:55 }}{% if message|length > 55 %} ...{% endif %}</h3>
+                        {% endfor %}
+                    {% endif %}
+                </div>
 				<div class="right">
-											<!-- User is not logged in yet -->
+                    {% if not user.is_authenticated %}
 					<div id="notLogged">
-						<form method="post" novalidate action="">
+						<form method="post" novalidate action="{% url 'login' %}">
+                            {% csrf_token %}
 							<div class="btn-red" style="width: 77px; margin: 3px 0 0 7px; float: right;">
 								<div class="btn-left"></div>
 								<input class="btn-center login loginbtn" style="border-radius: 0; float: left; font-size: 14px; margin: 0; padding: 0; width: 60px !important;" type="submit" tabindex="3" name="submit" value="{% trans 'LOGIN' %}">
 								<div class="btn-right"></div>
 							</div>
-							<input id="loginPassword" tabindex="2" class="inputThis gGrey right" autocomplete="off" type="text" name="password" value="PASSWORD" placeholder="{% trans 'PASSWORD' %}" onfocus="if(this.type==&#39;text&#39;){this.type=&#39;password&#39;;this.value=&#39;&#39;;}">
-							<input id="loginUsername" tabindex="1" class="inputThis gGrey right" type="text" name="nickname" value="USERNAME" placeholder="{% trans 'USERNAME' %}" onclick="if (this.value == &#39;{% trans 'USERNAME' %}&#39;){this.value = &#39;&#39;;}" onblur="if (this.value == &#39;&#39;){this.value=&#39;{% trans 'USERNAME' %}&#39;;}">
+                            <input type="hidden" value="{{ request.path }}" name="next_page">
+							<input id="password" tabindex="2" class="inputThis gGrey right" autocomplete="off" type="text" name="password" value="PASSWORD" placeholder="{% trans 'PASSWORD' %}" onfocus="if(this.type==&#39;text&#39;){this.type=&#39;password&#39;;this.value=&#39;&#39;;}">
+							<input id="username" tabindex="1" class="inputThis gGrey right" type="text" name="username" value="USERNAME" placeholder="{% trans 'USERNAME' %}" onclick="if (this.value == &#39;{% trans 'USERNAME' %}&#39;){this.value = &#39;&#39;;}" onblur="if (this.value == &#39;&#39;){this.value=&#39;{% trans 'USERNAME' %}&#39;;}">
 						</form>
 					</div>
+                    {% else %}
+					<div id="Logged">
+                        <form method="post" novalidate action="{% url 'logout' %}">
+                        <div style="display: flex;">
+                            <div class="user-name">{% trans 'Hola ' %} {% if user.first_name %}{{ user.first_name|capfirst }}{% else %}{{ user.username|capfirst }}{% endif %}</div>
+						    {% csrf_token %}
+                            <input type="hidden" value="{{ request.path }}" name="next_page">
+							<div class="btn-red" style="width: 77px; margin: 3px 0 0 7px; float: right;">
+								<div class="btn-left"></div>
+								<input class="btn-center login loginbtn" style="border-radius: 0; float: left; font-size: 14px; margin: 0; padding: 0; width: 60px !important;" type="submit" tabindex="3" name="submit" value="{% trans 'LOGOUT' %}">
+								<div class="btn-right"></div>
+							</div>
+                        </div>
+                        </form>
+					</div>
+                    {% endif %}
 				</div>
 			</div>
 		</div>
@@ -109,10 +134,8 @@
 		</div>
 		{% endblock navbar %}
 		<!-- CORE WEBSITE CONTENT -->
+
 		<div id="mainContent" style="min-height: 447px;">
-			<div id="errorBar" class="subTitle" onclick="hideIt(&#39;errorBar&#39;);">
-				<p class="subTitle">{% trans 'Error - This is a list of what has happened / what has gone wrong!' %}</p>
-			</div>
 			<div class="container">
 				{% block content_full %}
 				<div class="">
@@ -132,7 +155,15 @@
 				</div>
 				{% endblock content_full %}
 			</div>
+        <div>
 
+        {% comment %}</div>
+            <ul class="messages">
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+                    {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+
+                </li>
+            </ul>{% endcomment %}
 		</div>
 		<div id="lightbox_notMedia" class="parent_panel">
 			

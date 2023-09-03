@@ -512,6 +512,14 @@ scrollbar[orient="vertical"] {
 }
 .main.left.left-80 {
     width: 80% !important;
+    margin-left: 10rem;
+}
+.user-name {
+    margin-top:10px;
+    text-align: center;
+	font-family: 'magrabold', sans-serif;
+	color: white;
+    text-transform: uppercase;
 }
 
 

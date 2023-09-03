@@ -3,6 +3,8 @@ from django.db.models import F, Sum, Count, Case, When
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+
+from honauth.models import HonStatSettings
 from .models import *
 from .forms import *
 
@@ -102,6 +104,7 @@ def player_list(request):
 
 def stats(request):
     players = []
+    pr: HonStatSettings = HonStatSettings.objects.first()
     for player in Player.objects.exclude(playersgame__isnull=True):
         pog = PlayersGame.objects.exclude(kills=0, dead=0, assitances=0)\
                                  .filter(player=player)\
@@ -119,13 +122,15 @@ def stats(request):
                                             wins=Count(Case(When(game__team_win=F('team'), then=1))),
                                             )
         if pog['kills'] != None and pog['deads'] != None and pog['assists'] != None and pog['first_kills'] != None and pog['first_dies'] != None:
-            avg = pog['kills'] * 0.5 + pog['deads'] * -0.3 + pog['assists'] * 0.25 + pog['first_kills'] * 0.6 + pog['first_dies'] * -0.5 + pog['wins'] * 0.8 + (pog['games'] - pog['wins']) * -0.4
-            if pog['games'] < 20:
-                avg /= 20
+            avg = (pog['kills'] * pr.kill_value + pog['deads'] * pr.dead_value + pog['assists'] * pr.assist_value +
+                   pog['first_kills'] * pr.fkill_value + pog['first_dies'] * pr.fdead_value +
+                   pog['wins'] * pr.win_value + (pog['games'] - pog['wins']) * pr.loose_value)
+            if pog['games'] < pr.min_games:
+                avg /= pr.min_games
             else:
                 avg /= pog['games']
-            pr = {'name': player.name, 'avg': avg}
-            pogr = dict(pog, **pr)
+            result = {'name': player.name, 'avg': avg}
+            pogr = dict(pog, **result)
             players.append(pogr)
     return render(request, 'honete/stats.html', {'players': players})
 
@@ -134,6 +139,7 @@ def stats_tmp(request):
     players = []
     if request.method == 'POST':
         pass
+    pr = HonStatSettings.objects.first()
     for player in Player.objects.exclude(playersgame__isnull=True):
         pog = PlayersGame.objects.exclude(kills=0, dead=0, assitances=0)\
                                  .filter(player=player)\
@@ -151,13 +157,15 @@ def stats_tmp(request):
                                             wins=Count(Case(When(game__team_win=F('team'), then=1))),
                                             )
         if pog['kills'] != None and pog['deads'] != None and pog['assists'] != None and pog['first_kills'] != None and pog['first_dies'] != None:
-            avg = pog['kills'] * 0.5 + pog['deads'] * -0.3 + pog['assists'] * 0.25 + pog['first_kills'] * 0.6 + pog['first_dies'] * -0.2 + pog['wins'] * 0.8 + (pog['games'] - pog['wins']) * -0.2
-            if pog['games'] < 20:
-                avg /= 20
+            avg = (pog['kills'] * pr.kill_value + pog['deads'] * pr.dead_value + pog['assists'] * pr.assist_value +
+                   pog['first_kills'] * pr.fkill_value + pog['first_dies'] * pr.fdead_value +
+                   pog['wins'] * pr.win_value + (pog['games'] - pog['wins']) * pr.loose_value)
+            if pog['games'] < pr.min_games:
+                avg /= pr.min_games
             else:
                 avg /= pog['games']
-            pr = {'name': player.name, 'avg': avg}
-            pogr = dict(pog, **pr)
+            result = {'name': player.name, 'avg': avg}
+            pogr = dict(pog, **result)
             players.append(pogr)
     return render(request, 'honete/stats_tmp.html', {'players': players})
 

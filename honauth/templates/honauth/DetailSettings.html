@@ -1,0 +1,56 @@
+{% extends 'honauth/honauth.html' %}
+{% load static things_tags i18n %}
+{% block expand_left %}left-80{% endblock expand_left %}
+{% block content_right %}{% endblock content_right %}
+{% block content_left %}
+    <div class="detail settings">
+        <div class="row large">
+            <span class="title">{% trans 'Url Servidor TeamSpeak: ' %}</span><span><a href="{{ hon_app_settings.teamspeak_srv_url }}">{{ hon_app_settings.teamspeak_srv_url }}</a></span>
+        </div>
+        <div class="row">
+            <span class="title">{% trans 'Color Primer Lugar: ' %}</span>
+            <div class="color-block data" style="background-color: {{ hon_app_settings.color_first_place }};" data-hex="{{ hon_app_settings.color_first_place }}"></div>
+        </div>
+        <div class="row">
+            <span class="title">{% trans 'Color Último Lugar: ' %}</span>
+            <div class="color-block data" style="background-color: {{ hon_app_settings.color_last_place }};" data-hex="{{ hon_app_settings.color_last_place }}"></div>
+        </div>
+        <div class="row">
+            <span class="title">{% trans 'Color Ranking positivo: ' %}</span>
+            <div class="color-block data" style="background-color: {{ hon_app_settings.color_positive_ranking }};" data-hex="{{ hon_app_settings.color_positive_ranking }}"></div>
+        </div>
+        <div class="row">
+            <span class="title">{% trans 'Color Ranking negativo: ' %}</span>
+            <div class="color-block data" style="background-color: {{ hon_app_settings.color_negative_ranking }};" data-hex="{{ hon_app_settings.color_negative_ranking }}"></div>
+        </div>
+        <div class="row">
+            <span class="title">{% trans 'Mínimo de Juegos: ' %}</span><span class="data">{{ hon_app_settings.min_games }} {% trans ' unidades' %}</span>
+        </div>
+        <div class="row">
+            <span class="title">{% trans 'Peso del Asesinato: ' %}</span><span class="data">{{ hon_app_settings.kill_value }} {% trans ' unidades' %}</span>
+        </div>
+        <div class="row">
+            <span class="title">{% trans 'Peso de Muerte: ' %}</span><span class="data">{{ hon_app_settings.dead_value }} {% trans ' unidades' %}</span>
+        </div>
+        <div class="row">
+            <span class="title">{% trans 'Peso de la Asistencia: ' %}</span><span class="data">{{ hon_app_settings.assist_value }} {% trans ' unidades' %}</span>
+        </div>
+        <div class="row">
+            <span class="title">{% trans 'Peso de Primer Asesinato: ' %}</span><span class="data">{{ hon_app_settings.fkill_value }} {% trans ' unidades' %}</span>
+        </div>
+        <div class="row">
+            <span class="title">{% trans 'Peso de Primera Muerte: ' %}</span><span class="data">{{ hon_app_settings.fdead_value }} {% trans ' unidades' %}</span>
+        </div>
+        <div class="row">
+            <span class="title">{% trans 'Peso de la Vitoria: ' %}</span><span class="data">{{ hon_app_settings.win_value }} {% trans ' unidades' %}</span>
+        </div>
+        <div class="row">
+            <span class="title">{% trans 'Peso de la Derrota: ' %}</span><span class="data">{{ hon_app_settings.loose_value }} {% trans ' unidades' %}</span>
+        </div>
+    </div>
+    <div id="add_all">
+        <div id="add">
+            <a href="{% url 'settings_save' 0 %}" type="button" class="redbtn">{% trans 'Modificar' %}</a>
+        </div>
+    </div>
+{% endblock content_left %}

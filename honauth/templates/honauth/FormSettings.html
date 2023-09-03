@@ -1,0 +1,29 @@
+{% extends 'honauth/honauth.html' %}
+{% load static things_tags i18n %}
+{% block expand_left %}left-80{% endblock expand_left %}
+{% block content_right %}{% endblock content_right %}
+{% block content_left %}
+<div class="hero-form">
+    <form method="POST" action="{% url 'settings_save' 0 %}"> {% csrf_token %}
+    {% for field in form %}
+        <div>
+            <span class="headerTitle title">{{ field.label }}</span>
+            {{ field }}
+            <small>{{ field.help_text }}</small>
+            {% if field.errors %}
+            <span class="error_text">{{ field.errors }}</span>
+            {% endif %}
+        </div>
+
+    {% endfor %}
+        <br/>
+        <div class="row final">
+            <button onclick="location.href='{% url 'settings_detail' 0 %}'" type="button" class="redbtn left">{% trans 'cancel' %}</button>
+            <button type="submit" class="redbtn right">{% trans 'Guardar' %}</button>
+        </div>
+    </form>
+</div>
+{% endblock content_left %}
+
+
+

@@ -31,7 +31,7 @@
 	<!-- Javascript -->
 
 	</head>
-	<body style="min-height: 447px;" class="{% block body_class %}home{% endblock body_class %}">
+	<body style="min-height: 100vh;" class="{% block body_class %}home{% endblock body_class %}">
 		<!-- This is for the Login Bar -->
 		<div id="loginBar" class="gDark">
 			<div class="centerIt">
@@ -98,8 +98,9 @@
 				<div class="drop gui fontXXXS regular" id="guides" onmouseover="showMenu(&#39;guides&#39;)" onmouseout="hideMenu(&#39;guides&#39;)" style="opacity: 1; display: none;">
 					<!--<a href="explore.php">TAKE THE TOUR</a>
 					<a href="overview.php">GAMEPLAY OVERVIEW</a>-->
-					<a href="{% url 'heros_list' %}">HEROES</a>
-					<a href="{% url 'home' %}">ITEMS</a>
+					<a href="{% url 'settings_detail' 0 %}">{% trans 'CONFIGURACION' %}</a>
+					<a href="{% url 'heros_list' %}">{% trans 'HEROES' %}</a>
+					<a href="{% url 'home' %}">{% trans 'ITEMS' %}</a>
 				</div>
 				<a href="{% url 'games_list' %}" class="button sto left" onmouseover="showMenu(&#39;store&#39;)" onmouseout="hideMenu(&#39;store&#39;)"><p class="bold uppercase yellow fontM">{% trans 'MATCHs' %}</p></a>
 				<div class="drop sto fontXXXS regular" id="store" onmouseover="showMenu(&#39;store&#39;)" onmouseout="hideMenu(&#39;store&#39;)" style="opacity: 1; display: none;">
@@ -115,7 +116,7 @@
 				</div>
 				<a href="" class="button for right" onmouseover="showMenu(&#39;forums&#39;)" onmouseout="hideMenu(&#39;forums&#39;)"><p class="bold uppercase yellow fontM">{% trans 'COMMUNITY' %}</p></a>
 				<div class="drop for fontXXXS regular" id="forums" onmouseover="showMenu(&#39;forums&#39;)" onmouseout="hideMenu(&#39;forums&#39;)" style="display: none;">
-					<a href="ts3server://10.18.24.100?port=8080">{% trans 'TEAMSPEAK' %}</a>
+					<a target="_blank" href="ts3server://10.18.24.100?port=8080">{% trans 'TEAMSPEAK' %}</a>
 					<a href="{% url 'home' %}">{% trans 'EVENTS' %}</a>
 				</div>
 				<a href="" class="button med right" onmouseover="showMenu(&#39;media&#39;)" onmouseout="hideMenu(&#39;media&#39;)"><p class="bold uppercase yellow fontM">{% trans 'MEDIA' %}</p></a>

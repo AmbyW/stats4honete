@@ -521,6 +521,10 @@ scrollbar[orient="vertical"] {
 	color: white;
     text-transform: uppercase;
 }
+#mainContent .container {
+    overflow-y: scroll;
+    height: calc(100vh - 200px);
+}
 
 
 

@@ -1,0 +1,6 @@
+{% extends 'honete/homehon.html' %}
+{% load static %}
+{% block page_style %}
+    {{ block.super }}
+    <link href="{% static 'honauth/css/honauth.css' %}" rel="stylesheet" type="text/css">
+{% endblock page_style %}

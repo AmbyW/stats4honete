@@ -5,19 +5,23 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import resolve_url
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect
-from django.views.generic import RedirectView
+from django.views.generic import RedirectView, DetailView, UpdateView
 from django.views.generic.edit import BaseFormView
 from django.urls import reverse_lazy
-from django.contrib.auth import login as login_func
 from django.contrib import messages
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
+from django.contrib.auth import login as login_func
 from django.contrib.auth import logout as logout_func
+
+from .models import HonStatSettings
+from .forms import HonStatSettingsForm
 
 
 class HonLoginView(BaseFormView):
     form_class = AuthenticationForm
     success_url = reverse_lazy('home')
+    next_page = None
 
     def form_valid(self, form):
         """Security check complete. Log the user in."""
@@ -35,8 +39,8 @@ class HonLoginView(BaseFormView):
 
     def get_success_url(self):
         """Return the URL to redirect to after processing a valid form."""
-        if not self.success_url:
-            raise ImproperlyConfigured('No URL to redirect to. Provide a success_url.')
+        if self.next_page:
+            return str(self.next_page)
         return str(self.success_url)
 
 
@@ -57,3 +61,30 @@ class HonLogoutView(RedirectURLMixin, RedirectView):
         if self.next_page:
             return resolve_url(self.next_page)
         return self.success_url
+
+
+class DetailHoNAppSettingsView(DetailView):
+
+    queryset = HonStatSettings.objects.all()
+    model = HonStatSettings
+    template_name = 'honauth/DetailSettings.html'
+    context_object_name = 'hon_app_settings'
+
+    def get_object(self, queryset=None):
+        qr = queryset or self.queryset
+        obj, created = qr.get_or_create(id=1)
+        return obj
+
+
+class CreateUpdateHoNAppSettings(UpdateView):
+
+    queryset = HonStatSettings.objects.all()
+    model = HonStatSettings
+    template_name = 'honauth/FormSettings.html'
+    form_class = HonStatSettingsForm
+    success_url = reverse_lazy('settings_detail', kwargs={'pk': 0})
+
+    def get_object(self, queryset=None):
+        qr = queryset or self.queryset
+        obj, created = qr.get_or_create(id=1)
+        return obj

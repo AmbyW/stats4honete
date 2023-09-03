@@ -496,21 +496,35 @@ scrollbar[orient="vertical"] {
 }
 
 }
-msg {
+.msg {
     text-align: center;
     padding: 0.4rem;
 	font-family: 'magrabold', sans-serif;
 	color: white;
     border-radius: 3px;
     text-transform: uppercase;
-    .need-auth-msg {
-
-    }
-    .no-data {
-        background-color: #fba2a2a3;
-    }
 }
-
+.need-auth-msg {
+    background-color: #a2fbd11a;
+}
+.no-data {
+    background-color: #fba2a22e;
+}
+.main.left.left-80 {
+    width: 80% !important;
+    margin-left: 10rem;
+}
+.user-name {
+    margin-top:10px;
+    text-align: center;
+	font-family: 'magrabold', sans-serif;
+	color: white;
+    text-transform: uppercase;
+}
+#mainContent .container {
+    overflow-y: scroll;
+    height: calc(100vh - 200px);
+}
 
 
 

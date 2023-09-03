@@ -13,6 +13,7 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth import login as login_func
 from django.contrib.auth import logout as logout_func
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import HonStatSettings
 from .forms import HonStatSettingsForm
@@ -63,7 +64,7 @@ class HonLogoutView(RedirectURLMixin, RedirectView):
         return self.success_url
 
 
-class DetailHoNAppSettingsView(DetailView):
+class DetailHoNAppSettingsView(LoginRequiredMixin, DetailView):
 
     queryset = HonStatSettings.objects.all()
     model = HonStatSettings
@@ -76,7 +77,7 @@ class DetailHoNAppSettingsView(DetailView):
         return obj
 
 
-class CreateUpdateHoNAppSettings(UpdateView):
+class CreateUpdateHoNAppSettings(LoginRequiredMixin, UpdateView):
 
     queryset = HonStatSettings.objects.all()
     model = HonStatSettings

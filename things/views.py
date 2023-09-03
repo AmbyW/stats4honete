@@ -1,8 +1,7 @@
 from django.shortcuts import render, redirect
-from django.db.models import Q, F, Sum, Count, Case, When, Avg
+from django.db.models import F, Sum, Count, Case, When
 from django.urls import reverse_lazy
-from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import *
 from .forms import *
@@ -20,6 +19,7 @@ def hero_detail(request, id_hero):
     return render(request, 'honete/detail_hero.html', {'hero': hero})
 
 
+@login_required
 def hero_add(request):
     if request.method == 'POST':
         form = HeroForm(request.POST, request.FILES)
@@ -32,10 +32,11 @@ def hero_add(request):
     return render(request, 'honete/form_hero.html', {'form': form})
 
 
+@login_required
 def hero_del(request):
     for hero in Hero.objects.all():
         hero.delete()
-    return  render(request, 'honete/deleted_heros.html')
+    return  render(request, 'honete/delete_heros.html')
 
 
 def games_list(request):
@@ -54,6 +55,7 @@ def games_list(request):
     return render(request, 'honete/list_games.html', {'games': games, 'upload_form': form, 'errors': error})
 
 
+@login_required
 def game_add(request):
     error = ''
     mess = 'El log no se ha salvado: puede ser por una de las siguientes razones\n' + \
@@ -81,6 +83,7 @@ def game_add(request):
     return render(request, 'honete/form_games.html', {'form': form, 'errors': error})
 
 
+@login_required
 def game_delete_all(request):
     for game in Game.objects.all():
         game.delete()
@@ -171,28 +174,3 @@ def item_list(request):
 def item_detail(request, id_item):
     item = Item.objects.get_object_or_404(id=id_item)
     return render(request, 'honete/detail_item.html', {'item': item})
-
-
-def login_view(request):
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        usr = User.objects.filter(username=username).first()
-        if usr:
-            if usr.is_active:
-                account = authenticate(username, password)
-                if account:
-                    login(request, usr)
-                    return redirect(reverse_lazy('home'))
-                else:
-                    return redirect(reverse_lazy('home'))
-            else:
-                return redirect(reverse_lazy('home'))
-        else:
-            return redirect(reverse_lazy('home'))
-    return redirect(reverse_lazy('home'))
-
-
-def logout_view(request):
-    logout(request)
-    return redirect(reverse_lazy('home'))

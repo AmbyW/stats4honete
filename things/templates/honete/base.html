@@ -96,9 +96,9 @@
 				</div>
 				<a href="{% url 'heros_list' %}" class="button gui left" onmouseover="showMenu(&#39;guides&#39;)" onmouseout="hideMenu(&#39;guides&#39;)"><p class="bold uppercase yellow fontM">{% trans 'GAMEPLAY' %}</p></a>
 				<div class="drop gui fontXXXS regular" id="guides" onmouseover="showMenu(&#39;guides&#39;)" onmouseout="hideMenu(&#39;guides&#39;)" style="opacity: 1; display: none;">
-					<!--<a href="explore.php">TAKE THE TOUR</a>
-					<a href="overview.php">GAMEPLAY OVERVIEW</a>-->
+					{% if user.is_authenticated %}
 					<a href="{% url 'settings_detail' 0 %}">{% trans 'CONFIGURACION' %}</a>
+                    {% endif %}
 					<a href="{% url 'heros_list' %}">{% trans 'HEROES' %}</a>
 					<a href="{% url 'home' %}">{% trans 'ITEMS' %}</a>
 				</div>
@@ -177,6 +177,9 @@
 				<div class="col left">
 					<p class="footHead subTitle fontXL">{% trans 'GAMEPLAY' %}</p>
 					<p class="footList default">
+                        {% if user.is_authenticated %}
+                        <a href="{% url 'settings_detail' 0 %}">{% trans 'CONFIGURACION' %}</a><br>
+                        {% endif %}
 						<a href="{% url 'heros_list' %}">{% trans 'HEROES' %}</a><br>
 						<a href="{% url 'home' %}">{% trans 'ITEMS' %}</a><br>
 					</p>

@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 import os
 import environ
 
+from django.urls import reverse_lazy
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 env = environ.Env()
@@ -76,6 +78,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'statshon.wsgi.application'
 
+LOGIN_URL = reverse_lazy('home')
 
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases

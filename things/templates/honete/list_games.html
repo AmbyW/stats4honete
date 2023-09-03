@@ -26,7 +26,7 @@
             <td>{{game.game_version}}</td>
             <td>{{game.map_name}}</td>
             <td>{{game.server_game_name}}</td>
-            <td><a href="/media/{{game.log_file}}" target="_blank">{{game.match_name}}</a></td>
+            <td><a href="{% get_media_prefix %}{{game.log_file}}" target="_blank">{{game.match_name}}</a></td>
             <td>{% if game.team_win == "1" %}Hellbourne{% else %} Legion {% endif %}</td>
         </tr>
         {% empty %}

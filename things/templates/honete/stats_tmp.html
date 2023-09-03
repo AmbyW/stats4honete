@@ -1,46 +1,29 @@
 {% extends 'honete/homehon.html' %}
-{% load static %}
+{% load static i18n %}
 {% block body_class %}no-home{% endblock body_class %}
-    {% block content %}
-<div>
-</div>
-<table>
-    <thead>
-        <tr>
-
-        </tr>
-    </thead>
-    <tbody>
-    {% for player in players|dictsortreversed:"avg" %}
-        <tr>
-
-        </tr>
-    {% empty %}
-    <tr>No hay estadisticas de juego</tr>
-    {% endfor %}
-    </tbody>
-</table>
-{% endblock content %}
-    {% block content_left %}
+{% block expand_left %}left-80{% endblock expand_left %}
+{% block content_left %}
 <div>
     <table class="stats_table">
+        {% if players|length > 0 %}
         <thead class="headerTitle title gDark">
         <tr>
-            <th>Posición</th>
-            <th>Jugador</th>
-            <th>Puntuación</th>
-            <th>Juegos</th>
-            <th>kills</th>
-            <th>Muertes</th>
-            <th>Asistencias</th>
-            <th>FirstBlood Kill</th>
-            <th>FirstBlood Dies</th>
-            <th>Juegos Ganados</th>
-            <th>Oro</th>
-            <th>Experiencia</th>
-            <th>Daño</th>
+            <th>{% trans 'Posición' %}</th>
+            <th>{% trans 'Jugador' %}</th>
+            <th>{% trans 'Puntuación' %}</th>
+            <th>{% trans 'Juegos' %}</th>
+            <th>{% trans 'kills' %}</th>
+            <th>{% trans 'Muertes' %}</th>
+            <th>{% trans 'Asistencias' %}</th>
+            <th>{% trans 'FirstBlood Kill' %}</th>
+            <th>{% trans 'FirstBlood Dies' %}</th>
+            <th>{% trans 'Juegos Ganados' %}</th>
+            <th>{% trans 'Oro' %}</th>
+            <th>{% trans 'Experiencia' %}</th>
+            <th>{% trans 'Daño' %}</th>
         </tr>
         </thead>
+        {% endif %}
         <tbody>
         {% for player in players|dictsortreversed:"avg" %}
         <tr class="{% if forloop.first %}first-row {% elif forloop.last %} last-row {% elif player.avg <= 0 %} inred-row {% endif %}">
@@ -59,10 +42,9 @@
             <td class="text-center">{{player.damage|floatformat:2}}</td>
         </tr>
         {% empty %}
-        <tr><h3>No hay estadísticas de juegos</h3></tr>
+        <tr><h3 class="no-data msg">{% trans 'No hay estadísticas de juegos' %}</h3></tr>
         {% endfor %}
         </tbody>
     </table>
 </div>
-
     {% endblock content_left %}

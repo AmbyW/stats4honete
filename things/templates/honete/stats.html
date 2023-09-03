@@ -2,29 +2,11 @@
 {% load i18n %}
 {% load static %}
 {% block body_class %}no-home{% endblock body_class %}
-    {% block content %}
-<div>
-</div>
-<table>
-    <thead>
-        <tr>
-
-        </tr>
-    </thead>
-    <tbody>
-    {% for player in players|dictsortreversed:"avg" %}
-        <tr>
-
-        </tr>
-    {% empty %}
-    <tr class="no-data">{% trans 'No hay estadisticas de juego' %}</tr>
-    {% endfor %}
-    </tbody>
-</table>
-{% endblock content %}
-    {% block content_left %}
+{% block expand_left %}left-80{% endblock expand_left %}
+{% block content_left %}
 <div>
     <table class="stats_table">
+        {% if players|length > 0 %}
         <thead class="headerTitle title gDark">
         <tr>
             <th>{% trans 'Posición' %}</th>
@@ -40,6 +22,7 @@
         </tr>
         </thead>
         <tbody>
+        {% endif %}
         {% for player in players|dictsortreversed:"avg" %}
         <tr class="{% if forloop.first %}first-row {% elif forloop.last %} last-row {% elif player.avg <= 0 %} inred-row {% endif %}">
             <td class="text-center">{{forloop.counter}}</td>
@@ -54,7 +37,7 @@
             <td class="text-center">{{player.wins}}</td>
         </tr>
         {% empty %}
-        <tr><h3 class="no-data">{% trans 'No hay estadísticas de juegos' %}</h3></tr>
+        <tr><h3 class="msg no-data">{% trans 'No hay estadísticas de juegos' %}</h3></tr>
         {% endfor %}
         </tbody>
     </table>

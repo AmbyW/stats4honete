@@ -510,7 +510,9 @@ scrollbar[orient="vertical"] {
 .no-data {
     background-color: #fba2a22e;
 }
-
+.main.left.left-80 {
+    width: 80% !important;
+}
 
 
 

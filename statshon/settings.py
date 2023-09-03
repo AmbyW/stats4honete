@@ -151,16 +151,16 @@ ADMIN_PATH = env.str('DJANGO_ADMIN_PATH', default='admin')
 # Dropbox related settings and stuff
 # set 'storages.backends.dropbox.DropboxStorage' as default django storage backend
 
-DROPBOX_OAUTH2_TOKEN = env.str('', default='')
+DROPBOX_OAUTH2_TOKEN = env.str('DROPBOX_OAUTH2_TOKEN', default='')
 
-DROPBOX_APP_KEY = env.str('', default='')
+DROPBOX_APP_KEY = env.str('DROPBOX_APP_KEY', default='')
 
-DROPBOX_APP_SECRET = env.str('', default='')
+DROPBOX_APP_SECRET = env.str('DROPBOX_APP_SECRET', default='')
 
-DROPBOX_OAUTH2_REFRESH_TOKEN = env.str('', default='')
+DROPBOX_OAUTH2_REFRESH_TOKEN = env.str('DROPBOX_OAUTH2_REFRESH_TOKEN', default='')
 
-DROPBOX_ROOT_PATH = env.str('', default='/')
+DROPBOX_ROOT_PATH = env.str('DROPBOX_ROOT_PATH', default='/')
 
-DROPBOX_TIMEOUT = env.str('', default=100)
+DROPBOX_TIMEOUT = env.str('DROPBOX_TIMEOUT', default=100)
 
-DROPBOX_WRITE_MODE = env.str('', default='add')
+DROPBOX_WRITE_MODE = env.str('DROPBOX_WRITE_MODE', default='add')

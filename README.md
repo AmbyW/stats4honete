@@ -1,6 +1,6 @@
 [![MasterHead](.assets/honStatspage.png)](https://reynaldoportfolio.github.io)
-
-<img alt="Coding" width="400" src=".assets/logohon.png"></p>
+<p align="center">
+<img alt="Coding" width="100" src=".assets/logohon.png"></p>
 
 
 ***

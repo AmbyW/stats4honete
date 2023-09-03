@@ -116,7 +116,7 @@
 				</div>
 				<a href="" class="button for right" onmouseover="showMenu(&#39;forums&#39;)" onmouseout="hideMenu(&#39;forums&#39;)"><p class="bold uppercase yellow fontM">{% trans 'COMMUNITY' %}</p></a>
 				<div class="drop for fontXXXS regular" id="forums" onmouseover="showMenu(&#39;forums&#39;)" onmouseout="hideMenu(&#39;forums&#39;)" style="display: none;">
-					<a target="_blank" href="ts3server://10.18.24.100?port=8080">{% trans 'TEAMSPEAK' %}</a>
+					<a target="_blank" href="{{ teamspeak_srv_url }}">{% trans 'TEAMSPEAK' %}</a>
 					<a href="{% url 'home' %}">{% trans 'EVENTS' %}</a>
 				</div>
 				<a href="" class="button med right" onmouseover="showMenu(&#39;media&#39;)" onmouseout="hideMenu(&#39;media&#39;)"><p class="bold uppercase yellow fontM">{% trans 'MEDIA' %}</p></a>
@@ -188,7 +188,6 @@
 					<p class="footHead subTitle fontXL">{% trans 'MATCHs' %}</p>
 					<p class="footList default">
 						<a href="{% url 'games_list' %}">{% trans 'ALL MATCHs' %}</a><br>
-
 					</p>
 				</div>
 				<div class="col left">
@@ -202,7 +201,7 @@
 				<div class="col left">
 					<p class="footHead subTitle fontXL">{% trans 'COMMUNITY' %}</p>
 					<p class="footList default">
-					<a href="ts3server://10.18.24.100?port=8080">{% trans 'TEAMSPEAK' %}</a><br>
+					<a href="{{ teamspeak_srv_url }}">{% trans 'TEAMSPEAK' %}</a><br>
 					<a href="{% url 'home' %}">{% trans 'EVENTS' %}</a><br>
 					</p>
 				</div>

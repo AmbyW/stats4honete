@@ -2,6 +2,23 @@
 {% load i18n %}
 {% load static %}
 {% block body_class %}no-home{% endblock body_class %}
+{% block page_style %}
+	{{ block.super }}
+    <style>
+    .first-row {
+        color: {{ color_first_place }}
+    }
+    .last-row {
+        color: {{ color_last_place }}
+    }
+    .inred-row {
+        color: {{ color_negative_ranking }}
+    }
+    .positive-row {
+        color: {{ color_positive_ranking }}
+    }
+    </style>
+{% endblock %}
 {% block expand_left %}left-80{% endblock expand_left %}
 {% block content_left %}
 <div>
@@ -24,7 +41,7 @@
         <tbody>
         {% endif %}
         {% for player in players|dictsortreversed:"avg" %}
-        <tr class="{% if forloop.first %}first-row {% elif forloop.last %} last-row {% elif player.avg <= 0 %} inred-row {% endif %}">
+        <tr class="{% if forloop.first %}first-row {% elif forloop.last %} last-row {% elif player.avg <= 0 %} inred-row {% else %} positive-row {% endif %}">
             <td class="text-center">{{forloop.counter}}</td>
             <td>{{player.name}}</td>
             <td class="text-center">{{player.avg|floatformat:2}}</td>

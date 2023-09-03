@@ -1,4 +1,5 @@
 {% extends 'honete/homehon.html' %}
+{% load i18n %}
 {% load static %}
 {% block body_class %}no-home{% endblock body_class %}
     {% block content %}
@@ -16,7 +17,7 @@
 
         </tr>
     {% empty %}
-    <tr>No hay estadisticas de juego</tr>
+    <tr class="no-data">{% trans 'No hay estadisticas de juego' %}</tr>
     {% endfor %}
     </tbody>
 </table>
@@ -26,16 +27,16 @@
     <table class="stats_table">
         <thead class="headerTitle title gDark">
         <tr>
-            <th>Posición</th>
-            <th>Jugador</th>
-            <th>Puntuación</th>
-            <th>Juegos</th>
-            <th>kills</th>
-            <th>Muertes</th>
-            <th>Asistencias</th>
-            <th>FirstBlood Kill</th>
-            <th>FirstBlood Dies</th>
-            <th>Juegos Ganados</th>
+            <th>{% trans 'Posición' %}</th>
+            <th>{% trans 'Jugador' %}</th>
+            <th>{% trans 'Puntuación' %}</th>
+            <th>{% trans 'Juegos' %}</th>
+            <th>{% trans 'kills' %}</th>
+            <th>{% trans 'Muertes' %}</th>
+            <th>{% trans 'Asistencias' %}</th>
+            <th>{% trans 'FirstBlood Kill' %}</th>
+            <th>{% trans 'FirstBlood Dies' %}</th>
+            <th>{% trans 'Juegos Ganados' %}</th>
         </tr>
         </thead>
         <tbody>
@@ -53,7 +54,7 @@
             <td class="text-center">{{player.wins}}</td>
         </tr>
         {% empty %}
-        <tr><h3>No hay estadísticas de juegos</h3></tr>
+        <tr><h3 class="no-data">{% trans 'No hay estadísticas de juegos' %}</h3></tr>
         {% endfor %}
         </tbody>
     </table>

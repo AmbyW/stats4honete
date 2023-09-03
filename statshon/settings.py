@@ -28,7 +28,7 @@ if READ_DOT_ENV_FILE:
 SECRET_KEY = env.str('DJANGO_SECRET_KEY', default='9=52+$nm-if$d$sc%+c_-sp$2@cbkeq#cn15kmaeu&ecyy&csg')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env.bool('DJANGO_DEBUG', default=False)
+DEBUG = env.bool('DJANGO_DEBUG', default=True)
 
 ALLOWED_HOSTS = ['*']
 

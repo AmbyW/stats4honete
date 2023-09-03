@@ -1,22 +1,23 @@
 {% extends 'honete/homehon.html' %}
+{% load i18n %}
 {% load static things_tags %}
 {% block content_left %}
 <div class="stats_table">
 
     <div>
-        <span class="stat_title">Estadísticas Hellbourne</span>
+        <span class="stat_title">{% trans 'Estadísticas Hellbourne' %}</span>
         <table class="stats_table">
             <thead class="headerTitle title gDark">
                 <tr>
-                    <th>Jugador</th>
-                    {% if "HoN Russian" in game.game_name %}<th>Dir IP</th>{% endif %}
-                    <th>Heroe</th>
-                    <th>K/D/A</th>
-                    <th>FirstBlood Kill</th>
-                    <th>FirstBlood Die</th>
-                    <th>Daño</th>
-                    <th>Oro</th>
-                    <th>EXP</th>
+                    <th>{% trans 'Jugador' %}</th>
+                    {% if "HoN Russian" in game.game_name %}<th>{% trans 'Dir IP' %}</th>{% endif %}
+                    <th>{% trans 'Heroe' %}</th>
+                    <th>{% trans 'K/D/A' %}</th>
+                    <th>{% trans 'FirstBlood Kill' %}</th>
+                    <th>{% trans 'FirstBlood Die' %}</th>
+                    <th>{% trans 'Daño' %}</th>
+                    <th>{% trans 'Oro' %}</th>
+                    <th>{% trans 'EXP' %}</th>
                 </tr>
             </thead>
             <tbody>
@@ -27,7 +28,7 @@
                     {% if "HoN Russian" in game.game_name %}<td>{{player.ip_address}}</td>{% endif %}
                     <td>
                         {% if player.hero %}
-                        <a href="{% url 'heros_view' player.hero.id }}">{{player.hero}}</a>
+                        <a href="{% url 'heros_view' player.hero.id %}">{{player.hero}}</a>
                         {% else %}
                         No identificado
                         {% endif %}
@@ -46,19 +47,19 @@
     </div>
     <br/>
     <div>
-        <span class="stat_title">Estadísticas Legion</span>
+        <span class="stat_title">{% trans 'Estadísticas Legion' %}</span>
         <table class="stats_table">
             <thead class="headerTitle title gDark">
                 <tr>
-                    <th>Jugador</th>
-                    {% if "HoN Russian" in game.game_name %}<th>Dir IP</th>{% endif %}
-                    <th>Héroe</th>
-                    <th>K/D/A</th>
-                    <th>FirstBlood Kill</th>
-                    <th>FirstBlood Die</th>
-                    <th>Daño</th>
-                    <th>Oro</th>
-                    <th>EXP</th>
+                    <th>{% trans 'Jugador' %}</th>
+                    {% if "HoN Russian" in game.game_name %}<th>{% trans 'Dir IP' %}</th>{% endif %}
+                    <th>{% trans 'Héroe' %}</th>
+                    <th>{% trans 'K/D/A' %}</th>
+                    <th>{% trans 'FirstBlood Kill' %}</th>
+                    <th>{% trans 'FirstBlood Die' %}</th>
+                    <th>{% trans 'Daño' %}</th>
+                    <th>{% trans 'Oro' %}</th>
+                    <th>{% trans 'EXP' %}</th>
                 </tr>
             </thead>
             <tbody>
@@ -69,7 +70,7 @@
                     {% if "HoN Russian" in game.game_name %}<td>{{player.ip_address}}</td>{% endif %}
                     <td>
                         {% if player.hero %}
-                        <a href="{% url 'heros_view' player.hero.id }}">{{player.hero}}</a>
+                        <a href="{% url 'heros_view' player.hero.id %}">{{player.hero}}</a>
                         {% else %}
                         No identificado
                         {% endif %}</td>
@@ -89,17 +90,17 @@
 {% endblock content_left %}
 {% block content_right %}
     <div class="gLight" id="summary" style="margin-top: 20px;">
-        <div class="headerTitle title fontXL gDark" style="border-radius: 6px 6px 0 0;">Match Summary</div>
+        <div class="headerTitle title fontXL gDark" style="border-radius: 6px 6px 0 0;">{% trans 'Match Summary' %}</div>
         <div id="info">
             <div class="column left subTitle fontXS">
-                Ganador:<br>
-                Match ID:<br>
-                Mapa:<br>
-                Fecha:<br>
-                Hora:<br>
-                Duración:<br>
-                Servidor:<br>
-                Versión:
+                {% trans 'Ganador:' %}<br>
+                {% trans 'Match ID:' %}<br>
+                {% trans 'Mapa:' %}<br>
+                {% trans 'Fecha:' %}<br>
+                {% trans 'Hora:' %}<br>
+                {% trans 'Duración:' %}<br>
+                {% trans 'Servidor:' %}<br>
+                {% trans 'Versión:' %}
             </div>
             <div class="column right regular greyLight fontXS">
                 - {% if game.team_win == 1 %}Hellbourne{% else %} Legion {% endif %}<br>

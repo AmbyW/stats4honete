@@ -11,19 +11,24 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
+import environ
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+env = environ.Env()
 
-
+READ_DOT_ENV_FILE = env.bool('DJANGO_READ_DOT_ENV_FILE', default=False)
+if READ_DOT_ENV_FILE:
+    # OS environment variables take precedence over variables from .env
+    env.read_env(str(BASE_DIR / '.env'))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '9=52+$nm-if$d$sc%+c_-sp$2@cbkeq#cn15kmaeu&ecyy&csg'
+SECRET_KEY = env.str('DJANGO_SECRET_KEY', default='9=52+$nm-if$d$sc%+c_-sp$2@cbkeq#cn15kmaeu&ecyy&csg')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env.bool('DJANGO_DEBUG', default=False)
 
 ALLOWED_HOSTS = ['*']
 
@@ -74,10 +79,12 @@ WSGI_APPLICATION = 'statshon.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
+DATABASE_NAME = env.str('DJANGO_DB_NAME', default='db.sqlite3')
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME': os.path.join(BASE_DIR, DATABASE_NAME),
     }
 }
 
@@ -100,6 +107,18 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+STORAGES = {
+    'default': {
+        'BACKEND': env.str('DJANGO_STORAGE_BACKEND', default='django.core.files.storage.FileSystemStorage'),
+        'OPTIONS': {
+            'location': '/media',
+            'base_url': '/media/',
+        },
+    },
+    'staticfiles': {
+        'BACKEND': 'django.contrib.staticfiles.storage.StaticFilesStorage',
+    },
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
@@ -126,3 +145,22 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+ADMIN_PATH = env.str('DJANGO_ADMIN_PATH', default='admin')
+
+# Dropbox related settings and stuff
+# set 'storages.backends.dropbox.DropboxStorage' as default django storage backend
+
+DROPBOX_OAUTH2_TOKEN = env.str('', default='')
+
+DROPBOX_APP_KEY = env.str('', default='')
+
+DROPBOX_APP_SECRET = env.str('', default='')
+
+DROPBOX_OAUTH2_REFRESH_TOKEN = env.str('', default='')
+
+DROPBOX_ROOT_PATH = env.str('', default='/')
+
+DROPBOX_TIMEOUT = env.str('', default=100)
+
+DROPBOX_WRITE_MODE = env.str('', default='add')

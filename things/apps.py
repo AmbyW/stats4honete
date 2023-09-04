@@ -2,6 +2,8 @@ from django.apps import AppConfig
 from django.conf import settings
 from django.contrib.auth import get_user_model
 
+from .utils import is_database_synchronized
+
 
 class ThingsConfig(AppConfig):
     name = 'things'
@@ -14,12 +16,13 @@ class ThingsConfig(AppConfig):
 def check_and_create_initial_models():
     try:
         from .models import TypeAttack, TypeHero, TypeTeam
-        TypeAttacks = [('Melee', '1'), ('Rango', '2'), ]
-        TypeHeroes = [('Agilidad', '1'), ('Fuerza', '2'), ('Inteligencia', '3'), ]
-        TypeTeams = [('HellBourne', '1'), ('Legion', '2'), ]
-        check_and_create_models(TypeTeam, TypeTeams)
-        check_and_create_models(TypeHero, TypeHeroes)
-        check_and_create_models(TypeAttack, TypeAttacks)
+        if is_database_synchronized():
+            TypeAttacks = [('Melee', '1'), ('Rango', '2'), ]
+            TypeHeroes = [('Agilidad', '1'), ('Fuerza', '2'), ('Inteligencia', '3'), ]
+            TypeTeams = [('HellBourne', '1'), ('Legion', '2'), ]
+            check_and_create_models(TypeTeam, TypeTeams)
+            check_and_create_models(TypeHero, TypeHeroes)
+            check_and_create_models(TypeAttack, TypeAttacks)
 
     except ImportError as _:
         pass

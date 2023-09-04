@@ -2,6 +2,9 @@ import os
 import time
 import threading
 
+from django.db import DEFAULT_DB_ALIAS, connections
+from django.db.migrations.executor import MigrationExecutor
+
 NUM_WORKERS = 6
 
 
@@ -732,3 +735,11 @@ def parse_data_russian(data, storage, start=None, end=None):
             parse_damage_russian(line, storage)
     end_time = time.time()
     print("Elapsed time=", end_time - start_time)
+
+
+def is_database_synchronized(database=DEFAULT_DB_ALIAS):
+    connection = connections[database]
+    connection.prepare_database()
+    executor = MigrationExecutor(connection)
+    targets = executor.loader.graph.leaf_nodes()
+    return not executor.migration_plan(targets=targets)

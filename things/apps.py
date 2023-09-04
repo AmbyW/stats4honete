@@ -2,13 +2,16 @@ from django.apps import AppConfig
 from django.conf import settings
 from django.contrib.auth import get_user_model
 
+from .utils import is_database_synchronized
+
 
 class ThingsConfig(AppConfig):
     name = 'things'
 
     def ready(self):
-        check_and_create_initial_models()
-        check_and_create_default_superuser()
+        if is_database_synchronized():
+            check_and_create_initial_models()
+            check_and_create_default_superuser()
 
 
 def check_and_create_initial_models():
@@ -39,5 +42,5 @@ def check_and_create_default_superuser():
         UserModel = get_user_model()
         if not UserModel.objects.filter(username=username).exists():
             superuser = UserModel(username=username)
-            superuser.set_password(password=password)
+            superuser.set_password(password)
             superuser.save()

@@ -42,5 +42,5 @@ def check_and_create_default_superuser():
         UserModel = get_user_model()
         if not UserModel.objects.filter(username=username).exists():
             superuser = UserModel(username=username)
-            superuser.set_password(password=password)
+            superuser.set_password(password)
             superuser.save()

@@ -9,20 +9,20 @@ class ThingsConfig(AppConfig):
     name = 'things'
 
     def ready(self):
-        check_and_create_initial_models()
-        check_and_create_default_superuser()
+        if is_database_synchronized():
+            check_and_create_initial_models()
+            check_and_create_default_superuser()
 
 
 def check_and_create_initial_models():
     try:
         from .models import TypeAttack, TypeHero, TypeTeam
-        if is_database_synchronized():
-            TypeAttacks = [('Melee', '1'), ('Rango', '2'), ]
-            TypeHeroes = [('Agilidad', '1'), ('Fuerza', '2'), ('Inteligencia', '3'), ]
-            TypeTeams = [('HellBourne', '1'), ('Legion', '2'), ]
-            check_and_create_models(TypeTeam, TypeTeams)
-            check_and_create_models(TypeHero, TypeHeroes)
-            check_and_create_models(TypeAttack, TypeAttacks)
+        TypeAttacks = [('Melee', '1'), ('Rango', '2'), ]
+        TypeHeroes = [('Agilidad', '1'), ('Fuerza', '2'), ('Inteligencia', '3'), ]
+        TypeTeams = [('HellBourne', '1'), ('Legion', '2'), ]
+        check_and_create_models(TypeTeam, TypeTeams)
+        check_and_create_models(TypeHero, TypeHeroes)
+        check_and_create_models(TypeAttack, TypeAttacks)
 
     except ImportError as _:
         pass

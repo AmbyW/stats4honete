@@ -696,9 +696,10 @@ form .gWhite .arrow {
     .hero-form form div select  {
         padding: 2%;
 	}
-    .hero-form form div input,
+    .hero-form form div input:not([type="color"]),
     .hero-form form div select {
         display: block;
+		padding: 2%;
         margin-top: 2%;
         margin-bottom: 2%;
     }

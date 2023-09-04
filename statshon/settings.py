@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 
 import os
 import environ
+import django_heroku
 
 from django.urls import reverse_lazy
 
@@ -169,3 +170,10 @@ DROPBOX_ROOT_PATH = env.str('DROPBOX_ROOT_PATH', default='/')
 DROPBOX_TIMEOUT = env.str('DROPBOX_TIMEOUT', default=100)
 
 DROPBOX_WRITE_MODE = env.str('DROPBOX_WRITE_MODE', default='add')
+
+# Heroku related stuff
+django_heroku.settings(locals(), staticfiles=False)
+
+# Default populated superuser
+DEFAULT_SUPERUSER_NAME = env.str('DEFAULT_SUPERUSER_NAME', default='')
+DEFAULT_SUPERUSER_PASS = env.str('DEFAULT_SUPERUSER_PASS', default='')

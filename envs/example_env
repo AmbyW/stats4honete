@@ -12,6 +12,7 @@ DJANGO_DB_PASSWORD=''
 
 DJANGO_STORAGE_BACKEND='django.core.files.storage.FileSystemStorage'
 DJANGO_ADMIN_PATH='admin'
+DJANGO_TRUSTED_ORIGINS=['https://myorigin.com']
 
 DROPBOX_OAUTH2_TOKEN=''
 DROPBOX_APP_KEY=''

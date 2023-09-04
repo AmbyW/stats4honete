@@ -4,7 +4,7 @@ from .models import HonStatSettings
 
 
 def hon_app_settings(request):
-    preferences = HonStatSettings.objects.get_or_create(id=1)
+    preferences, created = HonStatSettings.objects.get_or_create(id=1)
     selected_fields = ['teamspeak_srv_url',
                        'color_first_place',
                        'color_positive_ranking',

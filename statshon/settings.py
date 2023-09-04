@@ -85,12 +85,17 @@ LOGIN_URL = reverse_lazy('home')
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
-DATABASE_NAME = env.str('DJANGO_DB_NAME', default='db.sqlite3')
+DATABASE_NAME = env.str('DJANGO_DB_NAME', default='./db.sqlite3')
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, DATABASE_NAME),
+        'ENGINE': env.str('DJANGO_DB_ENGINE', default='django.db.backends.sqlite3'),
+        'NAME': DATABASE_NAME,
+        'HOST': env.str('DJANGO_DB_HOSTNAME', default='localhost'),
+        'PORT': env.int('DJANGO_DB_PORT', default=5433),
+        'USER': env.str('DJANGO_DB_USERNAME', default=''),
+        'CONN_MAX_AGE': None,
+        'PASSWORD': env.str('DJANGO_DB_PASSWORD', default=''),
     }
 }
 

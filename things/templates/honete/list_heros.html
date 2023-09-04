@@ -1,5 +1,5 @@
 {% extends 'honete/homehon.html' %}
-{% load static %}
+{% load static i18n %}
 {% block main_style %}
 {{ block.super }}
     <link href="{% static 'honete/css/heroes.css' %}" media="screen" rel="stylesheet" type="text/css">
@@ -8,14 +8,14 @@
 <div class="gridView wrapper" style="width: 910px; padding-bottom: 60px; display: block;">
     <div class="gLight sectionHeroes right">
         <div class="gDark">
-            <p class="greyLight fontXXXS regular"><span class="title fontXXL">Agilidad </span>Equipo: Hellbourne</p>
+            <p class="greyLight fontXXXS regular"><span class="title fontXXL">{% trans 'Agilidad' %} </span>{% trans 'Equipo: Hellbourne' %}</p>
         </div>
         <div style="padding: 1px;">
             {% for hero in heros %}
             {% if hero.type == 1 and hero.team == 1 %}
             <div class="filterObjectGrid Filter_Agility Filter_Ranged select">
                 <a href="{% url 'heros_view' hero.id %}">
-                    <div class="heroIcon" style="background-image: url('/media/{{hero.image}}');"></div>
+                    <div class="heroIcon" style="background-image: url('{% get_media_prefix %}{{hero.image}}');"></div>
                 </a>
                 <div class="darken"></div>
                 <div class="over default">{{hero.name}}</div>
@@ -27,14 +27,14 @@
     </div>
     <div class="gLight sectionHeroes left">
         <div class="gDark">
-            <p class="greyLight fontXXXS regular"><span class="title fontXXL">Agilidad </span>Equipo: Legion</p>
+            <p class="greyLight fontXXXS regular"><span class="title fontXXL">{% trans 'Agilidad' %} </span>{% trans 'Equipo: Legion' %}</p>
         </div>
         <div style="padding: 1px;">
             {% for hero in heros %}
             {% if hero.type == 1 and hero.team == 2 %}
             <div class="filterObjectGrid Filter_Agility Filter_Ranged select">
                 <a href="{% url 'heros_view' hero.id %}">
-                    <div class="heroIcon" style="background-image: url('/media/{{hero.image}}');"></div>
+                    <div class="heroIcon" style="background-image: url('{% get_media_prefix %}{{hero.image}}');"></div>
                 </a>
                 <div class="darken"></div>
                 <div class="over default">{{hero.name}}</div>
@@ -46,14 +46,14 @@
     </div>
     <div class="gLight sectionHeroes left">
         <div class="gDark">
-            <p class="greyLight fontXXXS regular"><span class="title fontXXL">Inteligencia </span>Equipo: Legion</p>
+            <p class="greyLight fontXXXS regular"><span class="title fontXXL">{% trans 'Inteligencia' %} </span>{% trans 'Equipo: Legion' %}</p>
         </div>
         <div style="padding: 1px;">
             {% for hero in heros %}
             {% if hero.type == 3 and hero.team == 2 %}
             <div class="filterObjectGrid Filter_Agility Filter_Ranged select">
                 <a href="{% url 'heros_view' hero.id %}">
-                    <div class="heroIcon" style="background-image: url('/media/{{hero.image}}');"></div>
+                    <div class="heroIcon" style="background-image: url('{% get_media_prefix %}{{hero.image}}');"></div>
                 </a>
                 <div class="darken"></div>
                 <div class="over default">{{hero.name}}</div>
@@ -65,14 +65,14 @@
     </div>
     <div class="gLight sectionHeroes right">
         <div class="gDark">
-            <p class="greyLight fontXXXS regular"><span class="title fontXXL">Inteligencia </span>Equipo: Hellbourne</p>
+            <p class="greyLight fontXXXS regular"><span class="title fontXXL">{% trans 'Inteligencia' %} </span>{% trans 'Equipo: Hellbourne' %}</p>
         </div>
         <div style="padding: 1px;">
             {% for hero in heros %}
             {% if hero.type == 3 and hero.team == 1 %}
             <div class="filterObjectGrid Filter_Agility Filter_Ranged select">
                 <a href="{% url 'heros_view' hero.id %}">
-                    <div class="heroIcon" style="background-image: url('/media/{{hero.image}}');"></div>
+                    <div class="heroIcon" style="background-image: url('{% get_media_prefix %}{{hero.image}}');"></div>
                 </a>
                 <div class="darken"></div>
                 <div class="over default">{{hero.name}}</div>
@@ -84,14 +84,14 @@
     </div>
     <div class="gLight sectionHeroes right">
         <div class="gDark">
-            <p class="greyLight fontXXXS regular"><span class="title fontXXL">Fuerza </span>Equipo: Hellbourne</p>
+            <p class="greyLight fontXXXS regular"><span class="title fontXXL">{% trans 'Fuerza' %} </span>{% trans 'Equipo: Hellbourne' %}</p>
         </div>
         <div style="padding: 1px;">
             {% for hero in heros %}
             {% if hero.type == 2 and hero.team == 1 %}
             <div class="filterObjectGrid Filter_Agility Filter_Ranged select">
                 <a href="{% url 'heros_view' hero.id %}">
-                    <div class="heroIcon" style="background-image: url('/media/{{hero.image}}');"></div>
+                    <div class="heroIcon" style="background-image: url('{% get_media_prefix %}{{hero.image}}');"></div>
                 </a>
                 <div class="darken"></div>
                 <div class="over default">{{hero.name}}</div>
@@ -103,14 +103,14 @@
     </div>
     <div class="gLight sectionHeroes left">
         <div class="gDark">
-            <p class="greyLight fontXXXS regular"><span class="title fontXXL">Fuerza </span>Equipo: Legion</p>
+            <p class="greyLight fontXXXS regular"><span class="title fontXXL">{% trans 'Fuerza' %} </span>{% trans 'Equipo: Legion' %}</p>
         </div>
         <div style="padding: 1px;">
             {% for hero in heros %}
             {% if hero.type == 2 and hero.team == 2 %}
             <div class="filterObjectGrid Filter_Agility Filter_Ranged select">
                 <a href="{% url 'heros_view' hero.id %}">
-                    <div class="heroIcon" style="background-image: url('/media/{{hero.image}}');"></div>
+                    <div class="heroIcon" style="background-image: url('{% get_media_prefix %}{{hero.image}}');"></div>
                 </a>
                 <div class="darken"></div>
                 <div class="over default">{{hero.name}}</div>
@@ -124,20 +124,31 @@
 {% endblock content_left %}
 
 {% block content_right %}
+    {% if user.is_authenticated %}
     <div class="gLight" id="add_block" style="margin-top: 15px; margin-left: 26%;">
-        <div class="headerTitle title fontXL gDark" style="border-radius: 6px 6px 0 0;">Agregar Héroe</div>
+        <div class="headerTitle title fontXL gDark" style="border-radius: 6px 6px 0 0;">{% trans 'Agregar Héroe' %}</div>
         <div id="add_all">
             <div id="add">
-                <a href="{% url 'heros_add' %}" type="button" class="redbtn">Agregar</a>
+                <a href="{% url 'heros_add' %}" type="button" class="redbtn">{% trans 'Agregar' %}</a>
             </div>
         </div>
     </div>
     <div class="gLight" id="erase_block" style="margin-top: 15px; margin-left: 26%;">
-        <div class="headerTitle title fontXL gDark" style="border-radius: 6px 6px 0 0;">Borrar Todos</div>
+        <div class="headerTitle title fontXL gDark" style="border-radius: 6px 6px 0 0;">{% trans 'Borrar Todos' %}</div>
         <div id="erase_all">
             <div id="eraser">
-                <a href="{% url 'heros_del' %}" type="button" class="redbtn">Borrar Todos</a>
+                <a href="{% url 'heros_del' %}" type="button" class="redbtn">{% trans 'Borrar Todos' %}</a>
             </div>
         </div>
     </div>
+    {% else %}
+    <div class="gLight" id="add_block" style="margin-top: 15px; margin-left: 26%;">
+        <div class="headerTitle title fontXL gDark" style="border-radius: 6px 6px 0 0;">{% trans 'Agregar Héroe' %}</div>
+        <div id="info">
+            <h3 class="msg need-auth-msg">
+                {% trans 'Necesita autenticarse para gestionar los datos de heroes' %}
+            </h3>
+        </div>
+    </div>
+    {% endif %}
 {% endblock content_right %}

@@ -1,0 +1,31 @@
+.detail.settings {
+    display: flex;
+    margin-top: 4rem;
+    flex-direction: row;
+    flex-wrap: wrap;
+    .row {
+        display: flex;
+        padding: 0.3rem 0.3rem 0.1rem 0.1rem;
+        margin: 0.2rem;
+        flex-direction: row;
+        min-width: 48%;
+        .color-block {
+            height: 1.1rem;
+            width: 1.7rem;
+            border-radius: 2px;
+        }
+        .title {
+            text-transform: uppercase;
+            font-family:  'magrabold', sans-serif;
+            margin-right: .9rem;
+        }
+        .data {
+            float: right;
+            margin-left: auto;
+            order: 2;
+        }
+    }
+    .row.large {
+        min-width: 75% !important;
+    }
+}

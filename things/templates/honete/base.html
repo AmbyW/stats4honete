@@ -1,6 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <!-- saved from url=(0032)https://www.heroesofnewerth.com/ -->
-{% load static %}
+{% load static i18n %}
 <html lang="en">
 	<head>
 		<link href="{% static 'honete/images/honlogo.png' %}"  rel="icon">
@@ -31,24 +31,49 @@
 	<!-- Javascript -->
 
 	</head>
-	<body style="min-height: 447px;" class="{% block body_class %}home{% endblock body_class %}">
+	<body style="min-height: 100vh;" class="{% block body_class %}home{% endblock body_class %}">
 		<!-- This is for the Login Bar -->
 		<div id="loginBar" class="gDark">
 			<div class="centerIt">
 				<!-- Login -->
+				<div class="left">
+                    {% if messages %}
+                        {% for message in messages %}
+                    <h3 class="msg">{{ message|truncatechars:55 }}{% if message|length > 55 %} ...{% endif %}</h3>
+                        {% endfor %}
+                    {% endif %}
+                </div>
 				<div class="right">
-											<!-- User is not logged in yet -->
+                    {% if not user.is_authenticated %}
 					<div id="notLogged">
-						<form method="post" novalidate action="">
+						<form method="post" novalidate action="{% url 'login' %}">
+                            {% csrf_token %}
 							<div class="btn-red" style="width: 77px; margin: 3px 0 0 7px; float: right;">
 								<div class="btn-left"></div>
-								<input class="btn-center login loginbtn" style="border-radius: 0; float: left; font-size: 14px; margin: 0; padding: 0; width: 60px !important;" type="submit" tabindex="3" name="submit" value="LOGIN">
+								<input class="btn-center login loginbtn" style="border-radius: 0; float: left; font-size: 14px; margin: 0; padding: 0; width: 60px !important;" type="submit" tabindex="3" name="submit" value="{% trans 'LOGIN' %}">
 								<div class="btn-right"></div>
 							</div>
-							<input id="loginPassword" tabindex="2" class="inputThis gGrey right" autocomplete="off" type="text" name="password" value="PASSWORD" placeholder="PASSWORD" onfocus="if(this.type==&#39;text&#39;){this.type=&#39;password&#39;;this.value=&#39;&#39;;}">
-							<input id="loginUsername" tabindex="1" class="inputThis gGrey right" type="text" name="nickname" value="USERNAME" placeholder="USERNAME" onclick="if (this.value == &#39;USERNAME&#39;){this.value = &#39;&#39;;}" onblur="if (this.value == &#39;&#39;){this.value=&#39;USERNAME&#39;;}">
+                            <input type="hidden" value="{{ request.path }}" name="next_page">
+							<input id="password" tabindex="2" class="inputThis gGrey right" autocomplete="off" type="text" name="password" value="PASSWORD" placeholder="{% trans 'PASSWORD' %}" onfocus="if(this.type==&#39;text&#39;){this.type=&#39;password&#39;;this.value=&#39;&#39;;}">
+							<input id="username" tabindex="1" class="inputThis gGrey right" type="text" name="username" value="USERNAME" placeholder="{% trans 'USERNAME' %}" onclick="if (this.value == &#39;{% trans 'USERNAME' %}&#39;){this.value = &#39;&#39;;}" onblur="if (this.value == &#39;&#39;){this.value=&#39;{% trans 'USERNAME' %}&#39;;}">
 						</form>
 					</div>
+                    {% else %}
+					<div id="Logged">
+                        <form method="post" novalidate action="{% url 'logout' %}">
+                        <div style="display: flex;">
+                            <div class="user-name">{% trans 'Hola ' %} {% if user.first_name %}{{ user.first_name|capfirst }}{% else %}{{ user.username|capfirst }}{% endif %}</div>
+						    {% csrf_token %}
+                            <input type="hidden" value="{{ request.path }}" name="next_page">
+							<div class="btn-red" style="width: 77px; margin: 3px 0 0 7px; float: right;">
+								<div class="btn-left"></div>
+								<input class="btn-center login loginbtn" style="border-radius: 0; float: left; font-size: 14px; margin: 0; padding: 0; width: 60px !important;" type="submit" tabindex="3" name="submit" value="{% trans 'LOGOUT' %}">
+								<div class="btn-right"></div>
+							</div>
+                        </div>
+                        </form>
+					</div>
+                    {% endif %}
 				</div>
 			</div>
 		</div>
@@ -66,41 +91,39 @@
 
 			<!-- Core Navigation -->
 			<div class="mNav navLeft left">
-				<a href="{% url 'home' %}" class="button com left" onmouseover="showMenu(&#39;community&#39;)" onmouseout="hideMenu(&#39;community&#39;)"><p class="bold uppercase yellow fontM">HOME</p></a>
+				<a href="{% url 'home' %}" class="button com left" onmouseover="showMenu(&#39;community&#39;)" onmouseout="hideMenu(&#39;community&#39;)"><p class="bold uppercase yellow fontM">{% trans 'HOME' %}</p></a>
 				<div class="drop com fontXXXS regular" id="community" onmouseover="showMenu(&#39;community&#39;)" onmouseout="hideMenu(&#39;community&#39;)" style="opacity: 0; display: none;">
 				</div>
-				<a href="{% url 'heros_list' %}" class="button gui left" onmouseover="showMenu(&#39;guides&#39;)" onmouseout="hideMenu(&#39;guides&#39;)"><p class="bold uppercase yellow fontM">GAMEPLAY</p></a>
+				<a href="{% url 'heros_list' %}" class="button gui left" onmouseover="showMenu(&#39;guides&#39;)" onmouseout="hideMenu(&#39;guides&#39;)"><p class="bold uppercase yellow fontM">{% trans 'GAMEPLAY' %}</p></a>
 				<div class="drop gui fontXXXS regular" id="guides" onmouseover="showMenu(&#39;guides&#39;)" onmouseout="hideMenu(&#39;guides&#39;)" style="opacity: 1; display: none;">
-					<!--<a href="explore.php">TAKE THE TOUR</a>
-					<a href="overview.php">GAMEPLAY OVERVIEW</a>-->
-					<a href="{% url 'heros_list' %}">HEROES</a>
-					<a href="{% url 'home' %}">ITEMS</a>
+					{% if user.is_authenticated %}
+					<a href="{% url 'settings_detail' 0 %}">{% trans 'CONFIGURACION' %}</a>
+                    {% endif %}
+					<a href="{% url 'heros_list' %}">{% trans 'HEROES' %}</a>
+					<a href="{% url 'home' %}">{% trans 'ITEMS' %}</a>
 				</div>
-				<a href="{% url 'games_list' %}" class="button sto left" onmouseover="showMenu(&#39;store&#39;)" onmouseout="hideMenu(&#39;store&#39;)"><p class="bold uppercase yellow fontM">MATCHs</p></a>
+				<a href="{% url 'games_list' %}" class="button sto left" onmouseover="showMenu(&#39;store&#39;)" onmouseout="hideMenu(&#39;store&#39;)"><p class="bold uppercase yellow fontM">{% trans 'MATCHs' %}</p></a>
 				<div class="drop sto fontXXXS regular" id="store" onmouseover="showMenu(&#39;store&#39;)" onmouseout="hideMenu(&#39;store&#39;)" style="opacity: 1; display: none;">
-					<!-- <a href="store.php">IN-GAME STORE</a>
-					<a href="merchandise/php">MERCHANDISING</a>-->
-					<a href="{% url 'games_list' %}">ALL MATCHs</a>
-					<!--<a target="_blank" href="/store/ecards/">GIFT AN ECARD</a>-->
+					<a href="{% url 'games_list' %}">{% trans 'ALL MATCHs' %}</a>
 				</div>
 			</div>
 
 			<div class="mNav navRight right">
-				<a href="{% url 'stats' %}" class="button ser right" onmouseover="showMenu(&#39;services&#39;)" onmouseout="hideMenu(&#39;services&#39;)"><p class="bold uppercase yellow fontM">STATS</p></a>
+				<a href="{% url 'stats' %}" class="button ser right" onmouseover="showMenu(&#39;services&#39;)" onmouseout="hideMenu(&#39;services&#39;)"><p class="bold uppercase yellow fontM">{% trans 'STATS' %}</p></a>
 				<div class="drop ser fontXXXS regular" id="services" onmouseover="showMenu(&#39;services&#39;)" onmouseout="hideMenu(&#39;services&#39;)" style="display: none;">
-					<a href="{% url 'stats' %}">FULL</a>
-					<a href="{% url 'stats_tmp' %}">TEMPORALY</a>
+					<a href="{% url 'stats' %}">{% trans 'FULL' %}</a>
+					<a href="{% url 'stats_tmp' %}">{% trans 'TEMPORALY' %}</a>
 				</div>
-				<a href="" class="button for right" onmouseover="showMenu(&#39;forums&#39;)" onmouseout="hideMenu(&#39;forums&#39;)"><p class="bold uppercase yellow fontM">COMMUNITY</p></a>
+				<a href="" class="button for right" onmouseover="showMenu(&#39;forums&#39;)" onmouseout="hideMenu(&#39;forums&#39;)"><p class="bold uppercase yellow fontM">{% trans 'COMMUNITY' %}</p></a>
 				<div class="drop for fontXXXS regular" id="forums" onmouseover="showMenu(&#39;forums&#39;)" onmouseout="hideMenu(&#39;forums&#39;)" style="display: none;">
-					<a href="ts3server://10.18.24.100?port=8080">TEAMSPEAK</a>
-					<a href="{% url 'home' %}">EVENTS</a>
+					<a target="_blank" href="{{ teamspeak_srv_url }}">{% trans 'TEAMSPEAK' %}</a>
+					<a href="{% url 'home' %}">{% trans 'EVENTS' %}</a>
 				</div>
-				<a href="" class="button med right" onmouseover="showMenu(&#39;media&#39;)" onmouseout="hideMenu(&#39;media&#39;)"><p class="bold uppercase yellow fontM">MEDIA</p></a>
+				<a href="" class="button med right" onmouseover="showMenu(&#39;media&#39;)" onmouseout="hideMenu(&#39;media&#39;)"><p class="bold uppercase yellow fontM">{% trans 'MEDIA' %}</p></a>
 				<div class="drop med fontXXXS regular" id="media" onmouseover="showMenu(&#39;media&#39;)" onmouseout="hideMenu(&#39;media&#39;)" style="opacity: 1; display: none;">
-					<a target="_blank" href="{% url 'home' %}">VIDEOS</a>
-					<a href="{% url 'home' %}">WALLPAPERS</a>
-					<a href="{% url 'home' %}">SCREENSHOTS</a>
+					<a target="_blank" href="{% url 'home' %}">{% trans 'VIDEOS' %}</a>
+					<a href="{% url 'home' %}">{% trans 'WALLPAPERS' %}</a>
+					<a href="{% url 'home' %}">{% trans 'SCREENSHOTS' %}</a>
 				</div>
 			</div>
 
@@ -112,14 +135,12 @@
 		</div>
 		{% endblock navbar %}
 		<!-- CORE WEBSITE CONTENT -->
+
 		<div id="mainContent" style="min-height: 447px;">
-			<div id="errorBar" class="subTitle" onclick="hideIt(&#39;errorBar&#39;);">
-				<p class="subTitle">Error - This is a list of what has happened / what has gone wrong!</p>
-			</div>
 			<div class="container">
 				{% block content_full %}
 				<div class="">
-					<div class="main left">
+					<div class="main left {% block expand_left %}{% endblock expand_left %}">
 						<div class="row right gLight" id="main_block">
 						{% block content_left %}
 						{% endblock content_left %}
@@ -135,7 +156,15 @@
 				</div>
 				{% endblock content_full %}
 			</div>
+        <div>
 
+        {% comment %}</div>
+            <ul class="messages">
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+                    {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+
+                </li>
+            </ul>{% endcomment %}
 		</div>
 		<div id="lightbox_notMedia" class="parent_panel">
 			
@@ -146,43 +175,46 @@
 		<div id="footer">
 			<div style="width: 1040px; margin: auto; height: 100%; padding: 0 30px;">
 				<div class="col left">
-					<p class="footHead subTitle fontXL">GAMEPLAY</p>
+					<p class="footHead subTitle fontXL">{% trans 'GAMEPLAY' %}</p>
 					<p class="footList default">
-						<a href="{% url 'heros_list' %}">HEROES</a><br>
-						<a href="{% url 'home' %}">ITEMS</a><br>
+                        {% if user.is_authenticated %}
+                        <a href="{% url 'settings_detail' 0 %}">{% trans 'CONFIGURACION' %}</a><br>
+                        {% endif %}
+						<a href="{% url 'heros_list' %}">{% trans 'HEROES' %}</a><br>
+						<a href="{% url 'home' %}">{% trans 'ITEMS' %}</a><br>
 					</p>
 				</div>
 				<div class="col left">
-					<p class="footHead subTitle fontXL">MATCHs</p>
+					<p class="footHead subTitle fontXL">{% trans 'MATCHs' %}</p>
 					<p class="footList default">
-						<a href="{% url 'games_list' %}">ALL MATCHs</a><br>
-
+						<a href="{% url 'games_list' %}">{% trans 'ALL MATCHs' %}</a><br>
 					</p>
 				</div>
 				<div class="col left">
-					<p class="footHead subTitle fontXL">MEDIA</p>
+					<p class="footHead subTitle fontXL">{% trans 'MEDIA' %}</p>
 					<p class="footList default">
-						<a target="_blank" href="{% url 'home' %}">VIDEOS</a><br>
-						<a href="{% url 'home' %}">WALLPAPERS</a><br>
-						<a href="{% url 'home' %}">SCREENSHOTS</a><br>
+						<a target="_blank" href="{% url 'home' %}">{% trans 'VIDEOS' %}</a><br>
+						<a href="{% url 'home' %}">{% trans 'WALLPAPERS' %}</a><br>
+						<a href="{% url 'home' %}">{% trans 'SCREENSHOTS' %}</a><br>
 					</p>
 				</div>
 				<div class="col left">
-					<p class="footHead subTitle fontXL">COMMUNITY</p>
+					<p class="footHead subTitle fontXL">{% trans 'COMMUNITY' %}</p>
 					<p class="footList default">
-					<a href="ts3server://10.18.24.100?port=8080">TEAMSPEAK</a><br>
-					<a href="{% url 'home' %}">EVENTS</a><br>
+					<a href="{{ teamspeak_srv_url }}">{% trans 'TEAMSPEAK' %}</a><br>
+					<a href="{% url 'home' %}">{% trans 'EVENTS' %}</a><br>
 					</p>
 				</div>
 
 				<div id="details" class="left regular fontXXS greyDark">
-					2019 cnet Detroll Copy Left, All Lefts Reserved. <br>					
+					{% now "Y" %} CNeT Masquer Copy Left, All Lefts Reserved. <br>
+                    {% now "Y" %} all graphics and styles are right reserved of HoN official<br>
 				</div>
 			</div>
 		</div>
 		{% endblock footer %}
 		<noscript>
-			No jodas de verdad no soportas eso, Vas de bar en Peor.
+			{% trans 'No jodas de verdad no soportas eso, Vas de bar en Peor.' %}
 		</noscript>
 		<div class="floatClear"></div>
 	</body>

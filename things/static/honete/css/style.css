@@ -11,7 +11,7 @@ body {
 	scrollbar-3dlight-color: #18212b;
 	scrollbar-highlight-color: #18212b;
 	scrollbar-track-color: #242424;
-	scrollbar-arrow-color: 567291;
+	scrollbar-arrow-color: #567291;
 	scrollbar-shadow-color: #2a2a2a;
 	}
 	
@@ -197,10 +197,7 @@ a:active {text-decoration:none; border:0; color:#fff;}
 	font-weight: bold;
 	font-size:1.0em;
 	color:#b5b5b5;
-	font-weight:bold;
-	
-	
-}
+ }
 
  .wrapper-dropdown-3 {
     /* Size and position */
@@ -218,8 +215,7 @@ a:active {text-decoration:none; border:0; color:#fff;}
 	font-weight: bold;
 	font-size:1.0em;
 	color:#b5b5b5;
-	font-weight:bold;
-}
+ }
 
 /* Arrows */
 
@@ -500,7 +496,35 @@ scrollbar[orient="vertical"] {
 }
 
 }
-
+.msg {
+    text-align: center;
+    padding: 0.4rem;
+	font-family: 'magrabold', sans-serif;
+	color: white;
+    border-radius: 3px;
+    text-transform: uppercase;
+}
+.need-auth-msg {
+    background-color: #a2fbd11a;
+}
+.no-data {
+    background-color: #fba2a22e;
+}
+.main.left.left-80 {
+    width: 80% !important;
+    margin-left: 10rem;
+}
+.user-name {
+    margin-top:10px;
+    text-align: center;
+	font-family: 'magrabold', sans-serif;
+	color: white;
+    text-transform: uppercase;
+}
+#mainContent .container {
+    overflow-y: scroll;
+    height: calc(100vh - 200px);
+}
 
 
 

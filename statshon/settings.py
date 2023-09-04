@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 import os
 import environ
 
+from django.urls import reverse_lazy
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 env = environ.Env()
@@ -28,7 +30,7 @@ if READ_DOT_ENV_FILE:
 SECRET_KEY = env.str('DJANGO_SECRET_KEY', default='9=52+$nm-if$d$sc%+c_-sp$2@cbkeq#cn15kmaeu&ecyy&csg')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env.bool('DJANGO_DEBUG', default=False)
+DEBUG = env.bool('DJANGO_DEBUG', default=True)
 
 ALLOWED_HOSTS = ['*']
 
@@ -43,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'things',
+    'honauth',
 ]
 
 MIDDLEWARE = [
@@ -68,6 +71,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'honauth.context_processors.hon_app_settings',
             ],
         },
     },
@@ -75,6 +79,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'statshon.wsgi.application'
 
+LOGIN_URL = reverse_lazy('home')
 
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases

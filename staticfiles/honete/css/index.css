@@ -1,5 +1,5 @@
 .main.left {
-	width: 812px;
+	width: 60%;
 }
 
 #newsFrameUnderlay {
@@ -62,7 +62,7 @@
 /* RIGHT SIDE */
 .main.right {
 	margin-left: 17px;
-	width: 265px;
+	width: 20%;
 }
 
 .mini_header {

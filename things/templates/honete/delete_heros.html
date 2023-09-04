@@ -1,7 +1,8 @@
 {% extends 'honete/homehon.html' %}
+{% load i18n %}
     {% block content_left %}
-<h1>Se borraron los héroes existentes.</h1>
+<h1>{% trans 'Se borraron los héroes existentes.' %}</h1>
 <div>
-    <a href="{% url 'heros_list' %}">volver al listado</a>
+    <a href="{% url 'heros_list' %}">{% trans 'volver al listado de héroes' %}</a>
 </div>
     {% endblock content_left %}

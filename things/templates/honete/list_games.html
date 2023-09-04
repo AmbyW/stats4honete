@@ -1,20 +1,22 @@
 {% extends 'honete/homehon.html' %}
-{% load static things_tags %}
+{% load static things_tags i18n %}
     {% block content_left %}
 <div>
     <table class="stats_table">
+        {% if games|length > 0 %}
         <thead class="headerTitle title gDark">
         <tr>
-            <th>Fecha y Hora</th>
-            <th>Duración</th>
-            <th>Nombre juego</th>
-            <th>Version juego</th>
-            <th>Nombre mapa</th>
-            <th>Nombre servidor</th>
-            <th>Nombre match</th>
-            <th>Equipo Ganador</th>
+            <th>{% translate 'Fecha y Hora' %}</th>
+            <th>{% translate 'Duración' %}</th>
+            <th>{% translate 'Nombre juego' %}</th>
+            <th>{% translate 'Version juego' %}</th>
+            <th>{% translate 'Nombre mapa' %}</th>
+            <th>{% translate 'Nombre servidor' %}</th>
+            <th>{% translate 'Nombre match' %}</th>
+            <th>{% translate 'Equipo Ganador' %}</th>
         </tr>
         </thead>
+        {% endif %}
         <tbody>
         {% for game in games %}
         <tr>
@@ -24,11 +26,11 @@
             <td>{{game.game_version}}</td>
             <td>{{game.map_name}}</td>
             <td>{{game.server_game_name}}</td>
-            <td><a href="/media/{{game.log_file}}" target="_blank">{{game.match_name}}</a></td>
+            <td><a href="{% get_media_prefix %}{{game.log_file}}" target="_blank">{{game.match_name}}</a></td>
             <td>{% if game.team_win == "1" %}Hellbourne{% else %} Legion {% endif %}</td>
         </tr>
         {% empty %}
-        <tr><h3>No hay ningun juego subido</h3></tr>
+        <tr><h3 class="msg no-data">{% trans 'No hay ningun juego subido' %}</h3></tr>
         {% endfor %}
         </tbody>
     </table>
@@ -37,33 +39,46 @@
     {% endblock content_left %}
 
     {% block content_right %}
-		<div class="gLight" id="summary" style="margin-top: 15px;">
-			<div class="headerTitle title fontXL gDark" style="border-radius: 6px 6px 0 0;">Subir Match</div>
-			<div id="info">
-                <form id="upload_form" enctype="multipart/form-data" method="post" action="{% url 'games_add' %}">{% csrf_token %}
-                    {% for field in upload_form %}
-                    <label for="id_{{field.name}}" class="headerTitle title"> {{ field.label }} </label>
-                        {{ field }}
-                        {{ field.errors }}
-                    {% endfor %}
-                    <div id="upload_submit">
-                        <button type="submit" class="redbtn">Subir Match</button>
-                    </div>
-                </form>
-                {% if errors %}
-                <div class="error_box">
-                    <span class="error_text">{{errors}}</span>
-                </div>
-                {% endif %}
+        {% if user.is_authenticated %}
+<div class="gLight" id="summary" style="margin-top: 15px;">
+    <div class="headerTitle title fontXL gDark" style="border-radius: 6px 6px 0 0;">{% trans 'Subir Registro de Juego' %}</div>
+    <div id="info">
+        <form id="upload_form" enctype="multipart/form-data" method="post" action="{% url 'games_add' %}">
+            {% csrf_token %}
+            {% for field in upload_form %}
+            <label for="id_{{field.name}}" class="headerTitle title"> {{ field.label }} </label>
+                {{ field }}
+                {{ field.errors }}
+            {% endfor %}
+            <div id="upload_submit">
+                <button type="submit" class="redbtn">{% trans 'Subir Registro' %}</button>
+            </div>
+        </form>
+        {% if errors %}
+        <div class="error_box">
+            <span class="error_text">{{errors}}</span>
+        </div>
+        {% endif %}
 
-			</div>
-		</div>
-        <div class="gLight" id="erase_block" style="margin-top: 15px;">
-			<div class="headerTitle title fontXL gDark" style="border-radius: 6px 6px 0 0;">Borrar Todos</div>
-			<div id="erase_all">
-				<div id="eraser">
-                    <a href="{% url 'games_del' %}" type="button" class="redbtn">Borrar Todos</a>
-				</div>
-			</div>
-		</div>
+    </div>
+</div>
+<div class="gLight" id="erase_block" style="margin-top: 15px;">
+    <div class="headerTitle title fontXL gDark" style="border-radius: 6px 6px 0 0;">{% trans 'Borrar Todos' %}</div>
+    <div id="erase_all">
+        <div id="eraser">
+            <a href="{% url 'games_del' %}" type="button" class="redbtn">{% trans 'Borrar Todos' %}</a>
+        </div>
+    </div>
+</div>
+        {% else %}
+<div class="gLight" id="summary" style="margin-top: 15px;">
+    {% trans '' %}
+    <div class="headerTitle title fontXL gDark" style="border-radius: 6px 6px 0 0;">{% trans 'Subir Registro de Juego' %}</div>
+    <div id="info">
+        <h3 class="msg need-auth-msg">
+            {% trans 'Necesita autenticarse para subir algun registro de juego' %}
+        </h3>
+    </div>
+</div>
+        {% endif %}
     {% endblock content_right %}
